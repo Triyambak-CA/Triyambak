@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="S Triyambaka Patro — Chartered Accountant. Direct Taxation, International Tax Advisory, Audit & Assurance.">
+  <title>S Triyambaka Patro · Chartered Accountant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    /* ─────────────────────────────────────────
+       RESET & BASE
+    ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:            #070707;
+      --card-bg:       rgba(16, 16, 16, 0.72);
+      --card-bg-h:     rgba(24, 24, 24, 0.85);
+      --border:        rgba(255,255,255,0.07);
+      --border-h:      rgba(255,255,255,0.13);
+      --t1:            #e0e0e0;
+      --t2:            rgba(224,224,224,0.52);
+      --t3:            rgba(224,224,224,0.28);
+      --silver:        rgba(200,200,200,0.8);
+      --radius:        18px;
+      --radius-sm:     10px;
+      --ease:          cubic-bezier(0.25,0.46,0.45,0.94);
+      --trans:         0.35s var(--ease);
+      --font-d:        'Cormorant Garamond', Georgia, serif;
+      --font-b:        'Inter', system-ui, sans-serif;
+      --font-m:        'JetBrains Mono', 'Courier New', monospace;
+    }
+
+    html { scroll-behavior: smooth; background: var(--bg); }
+
+    body {
+      font-family: var(--font-b);
+      color: var(--t1);
+      background: var(--bg);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+
+    /* ─────────────────────────────────────────
+       BACKGROUND LAYER
+    ───────────────────────────────────────── */
+    .bg-layer {
+      position: fixed; inset: 0; z-index: 0;
+      overflow: hidden; pointer-events: none;
+    }
+
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(110px); will-change: transform;
+    }
+    .orb-1 {
+      width: 75vw; height: 75vw;
+      background: radial-gradient(circle at center, rgba(130,130,130,0.13) 0%, transparent 70%);
+      top: -25vw; left: -20vw;
+      animation: drift1 38s ease-in-out infinite alternate;
+    }
+    .orb-2 {
+      width: 55vw; height: 55vw;
+      background: radial-gradient(circle at center, rgba(100,100,100,0.09) 0%, transparent 70%);
+      bottom: -15vw; right: -15vw;
+      animation: drift2 48s ease-in-out infinite alternate;
+    }
+    .orb-3 {
+      width: 40vw; height: 40vw;
+      background: radial-gradient(circle at center, rgba(80,80,80,0.07) 0%, transparent 70%);
+      top: 40%; left: 55%;
+      animation: drift3 58s ease-in-out infinite alternate;
+    }
+    @keyframes drift1 { from { transform: translate(0,0) scale(1); }    to { transform: translate(7vw,5vw) scale(1.1); } }
+    @keyframes drift2 { from { transform: translate(0,0) scale(1); }    to { transform: translate(-5vw,-7vw) scale(1.08); } }
+    @keyframes drift3 { from { transform: translate(0,0) scale(1); }    to { transform: translate(-4vw,4vw) scale(0.92); } }
+
+    .grid-lines {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.016) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.016) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+
+    /* Cursor glow (added via JS) */
+    #cursor-glow {
+      position: fixed; pointer-events: none; z-index: 1;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(170,170,170,0.055) 0%, transparent 65%);
+      transform: translate(-50%,-50%);
+      transition: left 0.08s linear, top 0.08s linear;
+    }
+
+    /* ─────────────────────────────────────────
+       NAVIGATION
+    ───────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: 62px; padding: 0 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(7,7,7,0.78);
+      backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--font-d); font-size: 18px; font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+    .logo-badge {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: rgba(255,255,255,0.055); border: 1px solid var(--border-h);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-m); font-size: 11px; letter-spacing: 0.05em;
+      color: var(--t2);
+    }
+
+    .nav-links {
+      display: flex; gap: 2px; align-items: center;
+    }
+    .nav-links a {
+      padding: 6px 13px; font-size: 11.5px; font-weight: 400;
+      letter-spacing: 0.07em; text-transform: uppercase;
+      color: var(--t2); border-radius: 7px;
+      transition: var(--trans);
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--t1); background: rgba(255,255,255,0.06);
+    }
+
+    .nav-hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 8px; border: none; background: none;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 1px;
+      background: var(--t2); transition: var(--trans);
+    }
+
+    /* Mobile menu */
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; z-index: 999;
+      background: rgba(7,7,7,0.97);
+      backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+      flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: var(--font-d); font-size: 36px; font-weight: 300;
+      color: var(--t1); letter-spacing: 0.05em;
+      transition: var(--trans);
+    }
+    .mobile-menu a:hover { color: var(--t2); }
+    .mobile-menu-close {
+      position: absolute; top: 24px; right: 32px;
+      background: none; border: none; color: var(--t2);
+      font-size: 28px; cursor: pointer; font-weight: 300;
+    }
+
+    /* ─────────────────────────────────────────
+       LAYOUT
+    ───────────────────────────────────────── */
+    main { position: relative; z-index: 1; padding-top: 62px; }
+
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 36px; }
+
+    section { padding: 108px 0; }
+
+    /* ─────────────────────────────────────────
+       SECTION HEADERS
+    ───────────────────────────────────────── */
+    .eyebrow {
+      font-family: var(--font-m); font-size: 10.5px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--t3); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .eyebrow::before {
+      content: ''; display: block; width: 28px; height: 1px;
+      background: rgba(255,255,255,0.15);
+    }
+
+    .sec-title {
+      font-family: var(--font-d); font-size: clamp(38px, 5vw, 56px);
+      font-weight: 400; line-height: 1.12; color: var(--t1); margin-bottom: 52px;
+    }
+    .sec-title em { font-style: italic; color: var(--t2); }
+
+    /* ─────────────────────────────────────────
+       GLASS CARD
+    ───────────────────────────────────────── */
+    .glass {
+      background: var(--card-bg);
+      backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 44px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07);
+      transition: var(--trans);
+    }
+    .glass:hover {
+      background: var(--card-bg-h);
+      border-color: var(--border-h);
+      box-shadow: 0 14px 56px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.1);
+      transform: translateY(-3px);
+    }
+    .glass-flat { /* no hover lift */
+      background: var(--card-bg);
+      backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 44px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07);
+    }
+
+    /* ─────────────────────────────────────────
+       TAGS / PILLS
+    ───────────────────────────────────────── */
+    .tag {
+      display: inline-block; padding: 5px 13px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 100px; font-family: var(--font-m); font-size: 11px;
+      letter-spacing: 0.04em; color: var(--t2); transition: var(--trans);
+    }
+    .tag:hover { border-color: var(--border-h); color: var(--t1); }
+
+    /* ─────────────────────────────────────────
+       HERO SECTION
+    ───────────────────────────────────────── */
+    #hero {
+      min-height: 100vh; display: flex; align-items: center;
+      position: relative; overflow: hidden;
+    }
+
+    .hero-spotlight {
+      position: absolute; width: 900px; height: 900px; pointer-events: none;
+      background: radial-gradient(ellipse at center, rgba(160,160,160,0.07) 0%, transparent 62%);
+      top: 50%; left: 50%; transform: translate(-48%, -55%);
+    }
+
+    .hero-inner {
+      position: relative; z-index: 1;
+      max-width: 1140px; margin: 0 auto;
+      padding: 130px 36px 100px;
+      /* grid override applied below in HERO PHOTO section */
+    }
+
+    .hero-label {
+      font-family: var(--font-m); font-size: 11px; letter-spacing: 0.24em;
+      text-transform: uppercase; color: var(--t3); margin-bottom: 22px;
+      display: flex; align-items: center; gap: 14px;
+      opacity: 0; animation: fadeUp 0.9s var(--ease) 0.1s forwards;
+    }
+    .hero-label::before { content: ''; width: 36px; height: 1px; background: var(--border-h); }
+
+    .hero-name {
+      font-family: var(--font-d); font-weight: 300; line-height: 0.96;
+      letter-spacing: -0.02em; color: var(--t1); margin-bottom: 10px;
+      font-size: clamp(60px, 11vw, 128px);
+      opacity: 0; animation: fadeUp 1s var(--ease) 0.25s forwards;
+    }
+    .hero-name .dim { color: var(--t2); }
+
+    .hero-subtitle {
+      font-family: var(--font-d); font-weight: 300; font-style: italic;
+      font-size: clamp(22px, 3.5vw, 38px); color: var(--t2); margin-bottom: 38px;
+      opacity: 0; animation: fadeUp 0.9s var(--ease) 0.4s forwards;
+    }
+
+    .hero-tags {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 50px;
+      opacity: 0; animation: fadeUp 0.9s var(--ease) 0.55s forwards;
+    }
+
+    .hero-actions {
+      display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp 0.9s var(--ease) 0.7s forwards;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 30px; border-radius: 100px;
+      font-family: var(--font-b); font-size: 13px; font-weight: 500;
+      letter-spacing: 0.04em; cursor: pointer; border: none;
+      transition: var(--trans);
+    }
+    .btn-primary {
+      background: rgba(255,255,255,0.1); color: var(--t1);
+      border: 1px solid rgba(255,255,255,0.16);
+    }
+    .btn-primary:hover { background: rgba(255,255,255,0.16); border-color: rgba(255,255,255,0.25); }
+    .btn-ghost {
+      background: transparent; color: var(--t2);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { color: var(--t1); border-color: var(--border-h); background: rgba(255,255,255,0.04); }
+
+    .hero-scroll {
+      position: absolute; bottom: 40px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      color: var(--t3); font-family: var(--font-m); font-size: 9.5px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      animation: fadeUp 1s var(--ease) 1.2s both;
+    }
+    .scroll-line {
+      width: 1px; height: 52px;
+      background: linear-gradient(to bottom, transparent, var(--border-h), transparent);
+      animation: scrollPulse 2.4s ease-in-out infinite;
+    }
+    @keyframes scrollPulse { 0%,100% { opacity: 0.25; } 50% { opacity: 1; } }
+
+    /* ─────────────────────────────────────────
+       STATS BAR
+    ───────────────────────────────────────── */
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: hidden; margin-bottom: 52px;
+    }
+    .stat-item {
+      background: var(--card-bg); padding: 30px 20px; text-align: center;
+      transition: var(--trans);
+    }
+    .stat-item:hover { background: var(--card-bg-h); }
+    .stat-value {
+      font-family: var(--font-d); font-size: 52px; font-weight: 300;
+      line-height: 1; color: var(--t1); margin-bottom: 10px;
+    }
+    .stat-label {
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--t3); line-height: 1.5;
+    }
+
+    /* ─────────────────────────────────────────
+       ABOUT
+    ───────────────────────────────────────── */
+    .about-grid { display: grid; grid-template-columns: 1fr 1.65fr; gap: 24px; align-items: start; }
+
+    .info-card { padding: 38px; }
+    .info-list { list-style: none; }
+    .info-list li {
+      display: flex; flex-direction: column; gap: 5px;
+      padding: 15px 0; border-bottom: 1px solid var(--border);
+    }
+    .info-list li:first-child { border-top: 1px solid var(--border); padding-top: 15px; }
+    .info-label { font-family: var(--font-m); font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--t3); }
+    .info-value { font-size: 13.5px; color: var(--t1); line-height: 1.5; }
+
+    .about-text { padding: 42px; }
+    .about-text p { font-size: 15.5px; font-weight: 300; color: var(--t2); line-height: 1.85; margin-bottom: 22px; }
+    .about-text p:last-child { margin-bottom: 0; }
+    .about-text strong { color: var(--t1); font-weight: 500; }
+
+    /* ─────────────────────────────────────────
+       EXPERIENCE TIMELINE
+    ───────────────────────────────────────── */
+    .timeline { position: relative; padding-left: 36px; }
+    .timeline::before {
+      content: ''; position: absolute; left: 0; top: 10px; bottom: 0;
+      width: 1px; background: linear-gradient(to bottom, rgba(255,255,255,0.18), transparent);
+    }
+    .tl-item { position: relative; margin-bottom: 28px; }
+    .tl-item::before {
+      content: ''; position: absolute; left: -41px; top: 10px;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: rgba(180,180,180,0.35); border: 1px solid rgba(200,200,200,0.55);
+    }
+    .tl-card { padding: 34px 38px; }
+    .tl-head {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 16px; margin-bottom: 6px;
+    }
+    .tl-role {
+      font-family: var(--font-d); font-size: 26px; font-weight: 500; color: var(--t1);
+    }
+    .tl-period {
+      font-family: var(--font-m); font-size: 10.5px; color: var(--t3);
+      white-space: nowrap; padding-top: 7px;
+    }
+    .tl-firm { font-size: 13.5px; color: var(--t2); margin-bottom: 22px; }
+    .tl-bullets { list-style: none; }
+    .tl-bullets li {
+      position: relative; padding-left: 18px; margin-bottom: 11px;
+      font-size: 13.5px; font-weight: 300; color: var(--t2); line-height: 1.7;
+    }
+    .tl-bullets li::before { content: '—'; position: absolute; left: 0; color: var(--t3); }
+
+    /* ─────────────────────────────────────────
+       PRACTICE AREAS
+    ───────────────────────────────────────── */
+    .practice-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    .practice-card { padding: 38px; }
+    .practice-icon {
+      width: 46px; height: 46px; border-radius: 13px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 22px;
+    }
+    .practice-icon svg { width: 22px; height: 22px; stroke: var(--t2); fill: none; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+    .practice-num { font-family: var(--font-m); font-size: 10px; letter-spacing: 0.15em; color: var(--t3); margin-bottom: 10px; }
+    .practice-title { font-family: var(--font-d); font-size: 23px; font-weight: 500; color: var(--t1); margin-bottom: 20px; }
+    .practice-list { list-style: none; }
+    .practice-list li {
+      font-size: 13px; font-weight: 300; color: var(--t2);
+      padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+      display: flex; align-items: center; gap: 10px; line-height: 1.5;
+    }
+    .practice-list li:last-child { border-bottom: none; }
+    .practice-list li::before {
+      content: ''; width: 4px; height: 4px; border-radius: 50%;
+      background: rgba(200,200,200,0.3); flex-shrink: 0;
+    }
+
+    /* ─────────────────────────────────────────
+       QUALIFICATIONS
+    ───────────────────────────────────────── */
+    .qual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .qual-card { padding: 38px; }
+    .qual-card-label { font-family: var(--font-m); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--t3); margin-bottom: 26px; }
+    .qual-row {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .qual-row:last-child { border-bottom: none; }
+    .qual-check {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+    }
+    .qual-check svg { width: 10px; height: 10px; stroke: rgba(200,200,200,0.65); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .qual-name { font-size: 13.5px; color: var(--t1); line-height: 1.45; }
+    .qual-sub { font-size: 11.5px; color: var(--t3); margin-top: 4px; }
+
+    .acad-row {
+      padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .acad-row:last-child { border-bottom: none; }
+    .acad-degree { font-size: 13.5px; color: var(--t1); }
+    .acad-org { font-size: 11.5px; color: var(--t3); margin-top: 4px; }
+
+    /* ─────────────────────────────────────────
+       SKILLS
+    ───────────────────────────────────────── */
+    .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .skill-card { padding: 32px 36px; }
+    .skill-cat { font-family: var(--font-m); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--t3); margin-bottom: 18px; }
+    .skill-sub { font-size: 11.5px; font-weight: 500; color: var(--t2); margin: 16px 0 10px; letter-spacing: 0.02em; }
+    .tags-wrap { display: flex; flex-wrap: wrap; gap: 7px; }
+
+    /* ─────────────────────────────────────────
+       READING & WATCH LIST
+    ───────────────────────────────────────── */
+    .filter-row { display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; }
+    .filter-btn {
+      padding: 6px 16px; background: transparent;
+      border: 1px solid var(--border); border-radius: 100px;
+      font-family: var(--font-m); font-size: 11px; letter-spacing: 0.07em;
+      color: var(--t2); cursor: pointer; transition: var(--trans);
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(255,255,255,0.06); border-color: var(--border-h); color: var(--t1);
+    }
+    .content-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; min-height: 240px; }
+    .content-card { padding: 28px 30px; display: flex; flex-direction: column; gap: 10px; }
+    .content-card .cat-tag { margin-bottom: 4px; }
+    .cc-title { font-family: var(--font-d); font-size: 19px; font-weight: 500; color: var(--t1); line-height: 1.3; }
+    .cc-sub { font-size: 12.5px; color: var(--t3); }
+    .cc-notes { font-size: 13px; font-weight: 300; color: var(--t2); line-height: 1.65; flex: 1; }
+    .cc-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 14px; border-top: 1px solid var(--border); margin-top: auto;
+    }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 11px; border-radius: 100px;
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.05em;
+    }
+    .status-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+    .s-reading, .s-watching { background: rgba(180,180,180,0.07); color: rgba(210,210,210,0.7); border: 1px solid rgba(200,200,200,0.11); }
+    .s-completed { background: rgba(100,180,100,0.07); color: rgba(140,210,140,0.75); border: 1px solid rgba(100,180,100,0.12); }
+    .s-queue { background: rgba(130,130,190,0.07); color: rgba(160,160,210,0.75); border: 1px solid rgba(130,130,190,0.12); }
+    .cc-meta { font-family: var(--font-m); font-size: 10.5px; color: var(--t3); }
+
+    .empty-state {
+      grid-column: 1/-1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 90px 40px; gap: 18px;
+      border: 1px dashed rgba(255,255,255,0.06); border-radius: var(--radius); text-align: center;
+    }
+    .es-icon { font-size: 44px; opacity: 0.28; }
+    .es-title { font-family: var(--font-d); font-size: 26px; font-weight: 400; color: var(--t2); }
+    .es-text { font-size: 13px; color: var(--t3); max-width: 300px; line-height: 1.75; }
+    .es-code {
+      font-family: var(--font-m); font-size: 11px; color: var(--t3);
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      padding: 10px 18px; border-radius: 8px; margin-top: 6px;
+    }
+
+    /* ─────────────────────────────────────────
+       CONTACT
+    ───────────────────────────────────────── */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .contact-card { padding: 42px; }
+    .contact-intro { font-family: var(--font-d); font-size: 19px; font-weight: 300; color: var(--t2); line-height: 1.75; margin-bottom: 34px; }
+    .contact-row {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 16px 0; border-bottom: 1px solid var(--border);
+    }
+    .contact-row:first-of-type { border-top: 1px solid var(--border); }
+    .c-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .c-icon svg { width: 16px; height: 16px; stroke: var(--t2); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .c-label { font-family: var(--font-m); font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--t3); margin-bottom: 5px; }
+    .c-value { font-size: 13.5px; color: var(--t1); }
+    .c-value a { color: var(--t1); text-decoration: none; transition: var(--trans); }
+    .c-value a:hover { color: var(--t2); text-decoration: underline; text-underline-offset: 3px; }
+
+    .interests-title { font-family: var(--font-m); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--t3); margin-bottom: 16px; }
+    .contact-blurb { font-size: 14px; font-weight: 300; color: var(--t2); line-height: 1.8; margin-bottom: 28px; }
+    .interests-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
+    .interest-chip {
+      padding: 18px 16px; text-align: center; border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      transition: var(--trans);
+    }
+    .interest-chip:hover { background: rgba(255,255,255,0.06); border-color: var(--border-h); }
+    .ic-icon { font-size: 22px; margin-bottom: 8px; opacity: 0.65; }
+    .ic-label { font-size: 12px; color: var(--t2); font-weight: 300; }
+
+    /* ─────────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────────── */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 30px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-text { font-family: var(--font-m); font-size: 11px; color: var(--t3); letter-spacing: 0.05em; }
+
+    /* ─────────────────────────────────────────
+       SCROLL REVEAL ANIMATIONS
+    ───────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.75s var(--ease), transform 0.75s var(--ease);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal:nth-child(2) { transition-delay: 0.1s; }
+    .reveal:nth-child(3) { transition-delay: 0.2s; }
+    .reveal:nth-child(4) { transition-delay: 0.3s; }
+    .reveal:nth-child(5) { transition-delay: 0.4s; }
+    .reveal:nth-child(6) { transition-delay: 0.5s; }
+
+    /* ─────────────────────────────────────────
+       HERO PHOTO
+    ───────────────────────────────────────── */
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 330px;
+      align-items: center;
+      gap: 60px;
+    }
+    .hero-text { /* existing content wrapper */ }
+
+    .hero-photo-wrap {
+      position: relative;
+      animation: fadeUp 1s var(--ease) 0.85s both;
+    }
+    .hero-photo-frame {
+      position: relative;
+      border-radius: 22px; overflow: hidden;
+      aspect-ratio: 3/4;
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow:
+        0 28px 80px rgba(0,0,0,0.8),
+        0 0 0 1px rgba(255,255,255,0.05),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .hero-photo-frame img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      display: block;
+      filter: contrast(1.08) brightness(0.9) grayscale(0.08);
+    }
+    .hero-photo-frame::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(170deg, transparent 50%, rgba(7,7,7,0.55) 100%);
+      pointer-events: none;
+    }
+    .hero-photo-badge {
+      position: absolute; bottom: 18px; left: 18px; right: 18px; z-index: 2;
+      background: rgba(8,8,8,0.72);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; padding: 14px 16px;
+    }
+    .badge-name {
+      font-family: var(--font-d); font-size: 16px; font-weight: 500;
+      color: var(--t1); margin-bottom: 3px; line-height: 1.2;
+    }
+    .badge-title {
+      font-family: var(--font-m); font-size: 9.5px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--t3);
+    }
+
+    /* ─────────────────────────────────────────
+       ABOUT PROFILE PHOTO
+    ───────────────────────────────────────── */
+    .about-avatar {
+      width: 70px; height: 70px; border-radius: 50%;
+      overflow: hidden; margin-bottom: 22px;
+      border: 1px solid rgba(255,255,255,0.13);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.6);
+      flex-shrink: 0;
+    }
+    .about-avatar img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      filter: contrast(1.06) brightness(0.9);
+      display: block;
+    }
+
+    /* ─────────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────────── */
+    @media (max-width: 960px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .container { padding: 0 24px; }
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+      .hero-photo-wrap { max-width: 270px; margin: 0 auto; }
+      .about-grid, .contact-grid { grid-template-columns: 1fr; }
+      .practice-grid { grid-template-columns: 1fr; }
+      .qual-grid, .skills-grid { grid-template-columns: 1fr; }
+      .content-grid { grid-template-columns: repeat(2,1fr); }
+      .stats-bar { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 600px) {
+      section { padding: 76px 0; }
+      .hero-inner { padding: 100px 24px 80px; }
+      .content-grid { grid-template-columns: 1fr; }
+      .stats-bar { grid-template-columns: 1fr 1fr; }
+      footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ════════════════ BACKGROUND ════════════════ -->
+  <div class="bg-layer" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-lines"></div>
+  </div>
+  <div id="cursor-glow" aria-hidden="true"></div>
+
+  <!-- ════════════════ NAV ════════════════ -->
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo">
+      <span class="logo-badge">STP</span>
+      Triyambaka Patro
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#practice">Practice</a></li>
+      <li><a href="#qualifications">Qualifications</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#reading">Reading</a></li>
+      <li><a href="#watchlist">Watch</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" id="closeMenu" aria-label="Close menu">✕</button>
+    <a href="#about" class="mm-link">About</a>
+    <a href="#experience" class="mm-link">Experience</a>
+    <a href="#practice" class="mm-link">Practice</a>
+    <a href="#qualifications" class="mm-link">Qualifications</a>
+    <a href="#skills" class="mm-link">Skills</a>
+    <a href="#reading" class="mm-link">Reading</a>
+    <a href="#watchlist" class="mm-link">Watch</a>
+    <a href="#contact" class="mm-link">Contact</a>
+  </div>
+
+  <main>
+
+    <!-- ════════════════ HERO ════════════════ -->
+    <section id="hero">
+      <div class="hero-spotlight" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <!-- Hero Text -->
+        <div class="hero-text">
+          <p class="hero-label">Chartered Accountant · ACA, ICAI</p>
+          <h1 class="hero-name">S&nbsp;Triyambaka<br><span class="dim">Patro</span></h1>
+          <p class="hero-subtitle">Tax Advisory &amp; Consulting</p>
+          <div class="hero-tags">
+            <span class="tag">Direct Taxation</span>
+            <span class="tag">International Tax</span>
+            <span class="tag">Audit &amp; Assurance</span>
+            <span class="tag">NRI Advisory</span>
+            <span class="tag">Tax Litigation</span>
+            <span class="tag">Technical Analysis</span>
+            <span class="tag">AI Practitioner</span>
+          </div>
+          <div class="hero-actions">
+            <a href="#contact" class="btn btn-primary">Get in Touch</a>
+            <a href="#about" class="btn btn-ghost">View Profile ↓</a>
+          </div>
+        </div>
+
+        <!-- Hero Photo -->
+        <div class="hero-photo-wrap">
+          <div class="hero-photo-frame">
+            <img src="Photos/ChatGPT Image Dec 16, 2025, 09_35_08 PM.png" alt="S Triyambaka Patro — Chartered Accountant">
+            <div class="hero-photo-badge">
+              <div class="badge-name">S Triyambaka Patro</div>
+              <div class="badge-title">ACA · ICAI · Nov 2020</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-scroll" aria-hidden="true">
+        <div class="scroll-line"></div>
+        <span>Scroll</span>
+      </div>
+    </section>
+
+    <!-- ════════════════ ABOUT ════════════════ -->
+    <section id="about">
+      <div class="container">
+        <p class="eyebrow">About</p>
+        <h2 class="sec-title">Professional <em>Profile</em></h2>
+
+        <div class="stats-bar reveal">
+          <div class="stat-item">
+            <div class="stat-value" data-count="5" data-suffix="+">5+</div>
+            <div class="stat-label">Years Post-<br>Qualification</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" data-count="2">2</div>
+            <div class="stat-label">Active<br>Practices</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" data-count="7">7</div>
+            <div class="stat-label">CA Final<br>Exemptions</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" data-count="5" data-suffix="+">5+</div>
+            <div class="stat-label">ICAI<br>Certifications</div>
+          </div>
+        </div>
+
+        <div class="about-grid">
+          <div class="glass info-card reveal">
+            <div class="about-avatar">
+              <img src="Photos/ChatGPT Image Dec 16, 2025, 09_36_41 PM.png" alt="Triyambaka Patro">
+            </div>
+            <ul class="info-list">
+              <li>
+                <span class="info-label">Based in</span>
+                <span class="info-value">New Delhi &amp; Berhampur, Odisha</span>
+              </li>
+              <li>
+                <span class="info-label">Email</span>
+                <span class="info-value"><a href="mailto:Triyambak.CA@gmail.com" style="color:var(--t1)">Triyambak.CA@gmail.com</a></span>
+              </li>
+              <li>
+                <span class="info-label">Mobile</span>
+                <span class="info-value">+91-85870 65603<br>+91-96920 23456</span>
+              </li>
+              <li>
+                <span class="info-label">Practicing As</span>
+                <span class="info-value">STP &amp; Co. · YouWe Quest LLP</span>
+              </li>
+              <li>
+                <span class="info-label">Languages</span>
+                <span class="info-value">English · Hindi · Odia</span>
+              </li>
+              <li>
+                <span class="info-label">Nationality</span>
+                <span class="info-value">Indian</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="glass about-text reveal">
+            <p><strong>Chartered Accountant with over 5 years of post-qualification experience</strong> spanning direct taxation, international tax advisory, audit &amp; assurance, and corporate compliance.</p>
+            <p>Founder of <strong>STP &amp; Co.</strong> and Co-Founding Partner at <strong>YouWe Quest LLP</strong> — advising NRIs, startups, and businesses across pharmaceuticals, manufacturing, real estate, education, and renewable energy.</p>
+            <p>Brings a distinctive combination of <strong>technical CA depth</strong>, classical market analysis proficiency, and applied AI capability to complex advisory mandates.</p>
+            <p>Currently deepening specialism in <strong>US income tax law</strong>, cross-border structuring, and ESOP / RSU / ESPP taxation for globally mobile professionals.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ EXPERIENCE ════════════════ -->
+    <section id="experience">
+      <div class="container">
+        <p class="eyebrow">Career</p>
+        <h2 class="sec-title">Professional <em>Experience</em></h2>
+
+        <div class="timeline">
+          <div class="tl-item reveal">
+            <div class="glass tl-card">
+              <div class="tl-head">
+                <h3 class="tl-role">Founder &amp; Proprietor</h3>
+                <span class="tl-period">2021 — Present</span>
+              </div>
+              <p class="tl-firm">STP &amp; Co., Chartered Accountants &nbsp;·&nbsp; Berhampur &amp; New Delhi</p>
+              <ul class="tl-bullets">
+                <li>Established independent CA practice with focus on direct tax advisory, litigation, NRI taxation, and audit.</li>
+                <li>Managing active CIT(A) Appeal matters — end-to-end litigation strategy, drafting, and representation.</li>
+                <li>NRI taxation advisory for clients in the US and Singapore: residency determination, DTAA application, FEMA compliance, and India income tax compliances.</li>
+                <li>ESOP / ESPP / RSU taxation: perquisite valuation, capital gains computation, Form 67 foreign tax credit filings, and year-end compliance for employees of MNCs.</li>
+                <li>Statutory and tax audits across educational institutions, pharmaceutical manufacturers, solar energy companies, and more.</li>
+                <li>International tax consultancy: DTAA interpretation, withholding tax positions, and overseas structuring advisory.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="tl-item reveal">
+            <div class="glass tl-card">
+              <div class="tl-head">
+                <h3 class="tl-role">Co-Founding Partner</h3>
+                <span class="tl-period">2023 — Present</span>
+              </div>
+              <p class="tl-firm">YouWe Quest LLP, Chartered Accountants &nbsp;·&nbsp; Berhampur &amp; New Delhi</p>
+              <ul class="tl-bullets">
+                <li>Partner in multi-city CA firm offering financial advisory, audit &amp; assurance, debt syndication, subsidy liaison, and regulatory compliance services.</li>
+                <li>Contributed to firm's expansion into pharma, manufacturing, adtech, real estate, and educational institution segments.</li>
+                <li>Marquee clients include Taszen Pharmaceuticals, Utkal Enterprise, Vignan Institute of Technology &amp; Management, Studiosis (Adtech), Manor Real Estate, and Mierae Solar Energy Private Limited.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="tl-item reveal">
+            <div class="glass tl-card">
+              <div class="tl-head">
+                <h3 class="tl-role">Articleship &amp; Associate</h3>
+                <span class="tl-period">Oct 2013 – Oct 2016 &nbsp;·&nbsp; 2018 (6 mo.)</span>
+              </div>
+              <p class="tl-firm">V D &amp; Associates, Chartered Accountants &nbsp;·&nbsp; New Delhi</p>
+              <ul class="tl-bullets">
+                <li>3-year CA articleship: statutory and tax audits, income tax assessments, TDS returns, service tax filings, and accounts finalisation.</li>
+                <li>Post-qualification employment: continued audit engagement support and Excel-based MIS reporting.</li>
+                <li>Worked with notable clients including Crocs, Medtronic, Ritco Logistics, Ninex Real Estate Group, and iBooks — gaining exposure to multinational and domestic audit environments.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ PRACTICE AREAS ════════════════ -->
+    <section id="practice">
+      <div class="container">
+        <p class="eyebrow">Practice</p>
+        <h2 class="sec-title">Areas of <em>Practice</em></h2>
+
+        <div class="practice-grid">
+          <div class="glass practice-card reveal">
+            <div class="practice-icon">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="21"/><line x1="6" y1="21" x2="18" y2="21"/><path d="M6 9 L2 15 L10 15 Z"/><path d="M18 9 L14 15 L22 15 Z"/><line x1="6" y1="9" x2="18" y2="9"/></svg>
+            </div>
+            <p class="practice-num">01</p>
+            <h3 class="practice-title">Direct Tax &amp; Litigation</h3>
+            <ul class="practice-list">
+              <li>Income tax planning &amp; advisory</li>
+              <li>Tax audits (various sectors)</li>
+              <li>CIT(A) Appeal representation</li>
+              <li>Assessment &amp; search proceedings</li>
+              <li>Income Tax Return preparation</li>
+            </ul>
+          </div>
+
+          <div class="glass practice-card reveal">
+            <div class="practice-icon">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3 C10 7 10 17 12 21"/><path d="M12 3 C14 7 14 17 12 21"/><line x1="3" y1="12" x2="21" y2="12"/><path d="M4.5 7.5 Q12 9 19.5 7.5"/><path d="M4.5 16.5 Q12 15 19.5 16.5"/></svg>
+            </div>
+            <p class="practice-num">02</p>
+            <h3 class="practice-title">International Taxation</h3>
+            <ul class="practice-list">
+              <li>DTAA advisory &amp; interpretation</li>
+              <li>NRI taxation — US &amp; Singapore</li>
+              <li>ESOP / ESPP / RSU taxation</li>
+              <li>Overseas outsourcing — US market</li>
+              <li>US income tax law (advanced study)</li>
+            </ul>
+          </div>
+
+          <div class="glass practice-card reveal">
+            <div class="practice-icon">
+              <svg viewBox="0 0 24 24"><path d="M9 12 L11 14 L15 10"/><rect x="3" y="3" width="18" height="18" rx="3"/></svg>
+            </div>
+            <p class="practice-num">03</p>
+            <h3 class="practice-title">Audit &amp; Compliance</h3>
+            <ul class="practice-list">
+              <li>Statutory &amp; tax audits</li>
+              <li>Internal audit &amp; control reviews</li>
+              <li>GST advisory &amp; compliance</li>
+              <li>Corporate &amp; LLP compliance</li>
+              <li>FEMA compliance</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ QUALIFICATIONS ════════════════ -->
+    <section id="qualifications">
+      <div class="container">
+        <p class="eyebrow">Education</p>
+        <h2 class="sec-title">Qualifications &amp; <em>Certifications</em></h2>
+
+        <div class="qual-grid">
+          <div class="glass qual-card reveal">
+            <p class="qual-card-label">Core Qualification &amp; ICAI Certifications</p>
+
+            <div class="qual-row">
+              <div class="qual-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+              <div>
+                <div class="qual-name">Chartered Accountant (ACA) — ICAI</div>
+                <div class="qual-sub">November 2020 · CA Final — Exemptions in 7 out of 8 papers</div>
+              </div>
+            </div>
+            <div class="qual-row">
+              <div class="qual-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+              <div>
+                <div class="qual-name">Diploma in International Taxation</div>
+                <div class="qual-sub">ICAI Post-Qualification Certification</div>
+              </div>
+            </div>
+            <div class="qual-row">
+              <div class="qual-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+              <div>
+                <div class="qual-name">US Income Tax Certification</div>
+                <div class="qual-sub">ICAI · Ongoing</div>
+              </div>
+            </div>
+            <div class="qual-row">
+              <div class="qual-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+              <div>
+                <div class="qual-name">Overseas Outsourcing Services — US Market</div>
+                <div class="qual-sub">ICAI Post-Qualification Certification</div>
+              </div>
+            </div>
+            <div class="qual-row">
+              <div class="qual-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+              <div>
+                <div class="qual-name">Forensic Accounting &amp; Fraud Detection</div>
+                <div class="qual-sub">ICAI Post-Qualification Certification</div>
+              </div>
+            </div>
+            <div class="qual-row">
+              <div class="qual-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+              <div>
+                <div class="qual-name">Labour Laws in India</div>
+                <div class="qual-sub">ICAI Post-Qualification Certification</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass qual-card reveal">
+            <p class="qual-card-label">Academic Background</p>
+            <div class="acad-row">
+              <div class="acad-degree">CA Final</div>
+              <div class="acad-org">ICAI · November 2020</div>
+            </div>
+            <div class="acad-row">
+              <div class="acad-degree">CA Articleship (3 Years)</div>
+              <div class="acad-org">V D &amp; Associates, New Delhi · Oct 2013 – Oct 2016</div>
+            </div>
+            <div class="acad-row">
+              <div class="acad-degree">CA Intermediate (IPCC) — Both Groups</div>
+              <div class="acad-org">ICAI · November 2013</div>
+            </div>
+            <div class="acad-row">
+              <div class="acad-degree">CA Foundation (CPT)</div>
+              <div class="acad-org">ICAI · 2011</div>
+            </div>
+            <div class="acad-row">
+              <div class="acad-degree">100 Hours IT Training</div>
+              <div class="acad-org">ICAI · 2013</div>
+            </div>
+            <div class="acad-row">
+              <div class="acad-degree">Advanced ITT Training</div>
+              <div class="acad-org">ICAI · 2021</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ SKILLS ════════════════ -->
+    <section id="skills">
+      <div class="container">
+        <p class="eyebrow">Expertise</p>
+        <h2 class="sec-title">Tools &amp; <em>Skills</em></h2>
+
+        <div class="skills-grid">
+          <div class="glass skill-card reveal">
+            <p class="skill-cat">Taxation &amp; Compliance</p>
+            <p class="skill-sub">Returns &amp; Filing</p>
+            <div class="tags-wrap">
+              <span class="tag">KDK</span>
+              <span class="tag">ClearTax</span>
+              <span class="tag">Computax</span>
+            </div>
+            <p class="skill-sub">Portals</p>
+            <div class="tags-wrap">
+              <span class="tag">Income Tax Portal</span>
+              <span class="tag">GST Portal</span>
+              <span class="tag">TRACES</span>
+              <span class="tag">NSDL</span>
+              <span class="tag">MCA21</span>
+            </div>
+          </div>
+
+          <div class="glass skill-card reveal">
+            <p class="skill-cat">Accounting &amp; Business</p>
+            <p class="skill-sub">Accounting Software</p>
+            <div class="tags-wrap">
+              <span class="tag">Tally ERP/Prime</span>
+              <span class="tag">Zoho Books</span>
+              <span class="tag">QuickBooks</span>
+              <span class="tag">myBillBook</span>
+            </div>
+            <p class="skill-sub">Spreadsheets &amp; Office</p>
+            <div class="tags-wrap">
+              <span class="tag">MS Excel (Advanced)</span>
+              <span class="tag">Google Sheets</span>
+              <span class="tag">Financial Modelling</span>
+              <span class="tag">MIS Reporting</span>
+              <span class="tag">Microsoft Office</span>
+              <span class="tag">Google Workspace</span>
+            </div>
+          </div>
+
+          <div class="glass skill-card reveal">
+            <p class="skill-cat">Financial Markets &amp; TA</p>
+            <p class="skill-sub">Methodology</p>
+            <div class="tags-wrap">
+              <span class="tag">Price Action</span>
+              <span class="tag">Dow Theory</span>
+              <span class="tag">Support &amp; Resistance</span>
+              <span class="tag">Trend Analysis</span>
+              <span class="tag">MA / EMA</span>
+              <span class="tag">Volume Analysis</span>
+            </div>
+            <p class="skill-sub">Platforms &amp; Tools</p>
+            <div class="tags-wrap">
+              <span class="tag">TradingView</span>
+              <span class="tag">Chartink</span>
+              <span class="tag">Pine Script</span>
+              <span class="tag">Zerodha / Fyers</span>
+              <span class="tag">Sector Rotation</span>
+              <span class="tag">Relative Strength</span>
+            </div>
+          </div>
+
+          <div class="glass skill-card reveal">
+            <p class="skill-cat">Artificial Intelligence</p>
+            <p class="skill-sub">LLM &amp; Research</p>
+            <div class="tags-wrap">
+              <span class="tag">Claude</span>
+              <span class="tag">ChatGPT</span>
+              <span class="tag">Gemini</span>
+              <span class="tag">Perplexity</span>
+              <span class="tag">NotebookLM</span>
+            </div>
+            <p class="skill-sub">Agentic &amp; Visual</p>
+            <div class="tags-wrap">
+              <span class="tag">Manus AI</span>
+              <span class="tag">Napkin AI</span>
+              <span class="tag">Canva</span>
+              <span class="tag">Gamma</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ READING LIST ════════════════ -->
+    <section id="reading">
+      <div class="container">
+        <p class="eyebrow">Library</p>
+        <h2 class="sec-title">Reading <em>List</em></h2>
+
+        <div class="filter-row" id="readingFilters">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="reading">Reading</button>
+          <button class="filter-btn" data-filter="completed">Completed</button>
+          <button class="filter-btn" data-filter="queue">Queue</button>
+        </div>
+        <div class="content-grid" id="readingGrid"></div>
+      </div>
+    </section>
+
+    <!-- ════════════════ WATCH LIST ════════════════ -->
+    <section id="watchlist">
+      <div class="container">
+        <p class="eyebrow">Learning</p>
+        <h2 class="sec-title">Watch <em>List</em></h2>
+
+        <div class="filter-row" id="watchFilters">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="watching">Watching</button>
+          <button class="filter-btn" data-filter="completed">Completed</button>
+          <button class="filter-btn" data-filter="queue">Queue</button>
+        </div>
+        <div class="content-grid" id="watchGrid"></div>
+      </div>
+    </section>
+
+    <!-- ════════════════ CONTACT ════════════════ -->
+    <section id="contact">
+      <div class="container">
+        <p class="eyebrow">Contact</p>
+        <h2 class="sec-title">Get in <em>Touch</em></h2>
+
+        <div class="contact-grid">
+          <div class="glass contact-card reveal">
+            <p class="contact-intro">Open to new client engagements, advisory consultations, and professional collaborations across tax, audit, and international structuring.</p>
+
+            <div class="contact-row">
+              <div class="c-icon">
+                <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div>
+                <div class="c-label">Email</div>
+                <div class="c-value"><a href="mailto:Triyambak.CA@gmail.com">Triyambak.CA@gmail.com</a></div>
+              </div>
+            </div>
+
+            <div class="contact-row">
+              <div class="c-icon">
+                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.32C1.53 2.18 2.39 1 3.54 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.51a16 16 0 0 0 6 6l.87-.87a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </div>
+              <div>
+                <div class="c-label">Mobile</div>
+                <div class="c-value">+91-85870 65603</div>
+              </div>
+            </div>
+
+            <div class="contact-row">
+              <div class="c-icon">
+                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.32C1.53 2.18 2.39 1 3.54 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.51a16 16 0 0 0 6 6l.87-.87a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </div>
+              <div>
+                <div class="c-label">Alternate</div>
+                <div class="c-value">+91-96920 23456</div>
+              </div>
+            </div>
+
+            <div class="contact-row">
+              <div class="c-icon">
+                <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div>
+                <div class="c-label">Offices</div>
+                <div class="c-value">New Delhi &amp; Berhampur, Odisha</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass contact-card reveal">
+            <p class="interests-title">Beyond Practice</p>
+            <p class="contact-blurb">A practitioner of classical technical analysis grounded in price action, Dow Theory, and market structure. An active early adopter of AI tools across professional workflows — from tax research and litigation support to firm branding and automation.</p>
+
+            <div class="interests-grid">
+              <div class="interest-chip">
+                <div class="ic-icon">📈</div>
+                <div class="ic-label">Financial Markets</div>
+              </div>
+              <div class="interest-chip">
+                <div class="ic-icon">🤖</div>
+                <div class="ic-label">AI &amp; Technology</div>
+              </div>
+              <div class="interest-chip">
+                <div class="ic-icon">📚</div>
+                <div class="ic-label">Reading</div>
+              </div>
+              <div class="interest-chip">
+                <div class="ic-icon">🏏</div>
+                <div class="ic-label">Cricket</div>
+              </div>
+              <div class="interest-chip">
+                <div class="ic-icon">✈️</div>
+                <div class="ic-label">Travelling</div>
+              </div>
+              <div class="interest-chip">
+                <div class="ic-icon">🎵</div>
+                <div class="ic-label">Music</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p class="footer-text">© 2026 S Triyambaka Patro · Chartered Accountant · ACA, ICAI</p>
+    <p class="footer-text">New Delhi &amp; Berhampur, Odisha</p>
+  </footer>
+
+  <!-- ════════════════════════════════════════════════════════
+       SITE DATA & SCRIPTS
+       ════════════════════════════════════════════════════════ -->
+  <script>
+
+    /* ══════════════════════════════════════════════════════
+       ✏️  READING LIST — Add your books here
+       ══════════════════════════════════════════════════════
+       Copy the template below and add a new entry.
+
+       TEMPLATE:
+       {
+         title:    "Book Title",
+         author:   "Author Name",
+         category: "Tax | Finance | Markets | Technology | Philosophy | Business | Other",
+         status:   "reading | completed | queue",
+         notes:    "Optional personal notes or key takeaways",
+         year:     2025,      // Year read or added (optional)
+         rating:   5,         // 1–5 stars (optional)
+       },
+       ══════════════════════════════════════════════════════ */
+
+    const READING_LIST = [
+      // ← Add books here. Example:
+      // { title: "The Psychology of Money", author: "Morgan Housel", category: "Finance", status: "completed", year: 2024, rating: 5, notes: "Timeless insights on wealth and behaviour." },
+    ];
+
+
+    /* ══════════════════════════════════════════════════════
+       🎬  WATCH LIST — Add videos, courses & talks here
+       ══════════════════════════════════════════════════════
+       TEMPLATE:
+       {
+         title:    "Video / Course / Talk Title",
+         creator:  "Channel or Author Name",
+         category: "Tax | Markets | Technology | Finance | Business | Other",
+         platform: "YouTube | Coursera | Udemy | Other",
+         link:     "https://...",            // optional
+         status:   "watching | completed | queue",
+         notes:    "Optional notes",
+       },
+       ══════════════════════════════════════════════════════ */
+
+    const WATCH_LIST = [
+      // ← Add videos/courses here. Example:
+      // { title: "Introduction to US Tax for NRIs", creator: "ICAI e-Learning", category: "Tax", platform: "Other", status: "completed", notes: "Very relevant for NRI clients." },
+    ];
+
+
+    /* ══════════════════════════════════════════════════════
+       NO NEED TO EDIT BELOW — Core site logic
+       ══════════════════════════════════════════════════════ */
+
+    // ── Cursor glow ──
+    const glow = document.getElementById('cursor-glow');
+    document.addEventListener('mousemove', e => {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top  = e.clientY + 'px';
+    });
+
+    // ── Mobile menu ──
+    const hamburger  = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMenu  = document.getElementById('closeMenu');
+
+    hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
+    closeMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    document.querySelectorAll('.mm-link').forEach(a => {
+      a.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    });
+
+    // ── Scroll reveal (Intersection Observer) ──
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -36px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ── Active nav link ──
+    const sections  = document.querySelectorAll('section[id]');
+    const navLinks  = document.querySelectorAll('.nav-links a');
+    const navObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          navLinks.forEach(a => a.classList.remove('active'));
+          const link = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+          if (link) link.classList.add('active');
+        }
+      });
+    }, { threshold: 0.35 });
+    sections.forEach(s => navObs.observe(s));
+
+    // ── Counter animation for stats ──
+    function animateCount(el) {
+      const target = parseFloat(el.dataset.count);
+      const suffix = el.dataset.suffix || '';
+      const dur = 1800;
+      const start = performance.now();
+      function tick(now) {
+        const p = Math.min((now - start) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * eased) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    const statsObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('[data-count]').forEach(animateCount);
+          statsObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    const statsBar = document.querySelector('.stats-bar');
+    if (statsBar) statsObs.observe(statsBar);
+
+    // ── Render Reading List ──
+    function renderReading(filter = 'all') {
+      const grid = document.getElementById('readingGrid');
+      const items = filter === 'all' ? READING_LIST : READING_LIST.filter(b => b.status === filter);
+
+      if (!items.length) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="es-icon">📚</div>
+            <div class="es-title">Your Reading List</div>
+            <div class="es-text">Books you are reading, have completed, or plan to read will appear here as beautiful cards.</div>
+            <div class="es-code">Edit READING_LIST in this HTML file to add books</div>
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = items.map(b => `
+        <div class="glass content-card">
+          <span class="tag cat-tag">${b.category}</span>
+          <div class="cc-title">${b.title}</div>
+          <div class="cc-sub">by ${b.author}${b.year ? ' &nbsp;·&nbsp; ' + b.year : ''}</div>
+          ${b.notes ? `<div class="cc-notes">${b.notes}</div>` : ''}
+          <div class="cc-footer">
+            <span class="status-badge s-${b.status}">
+              <span class="status-dot"></span>
+              ${b.status.charAt(0).toUpperCase() + b.status.slice(1)}
+            </span>
+            ${b.rating ? `<span class="cc-meta">${'★'.repeat(b.rating)}${'☆'.repeat(5-b.rating)}</span>` : ''}
+          </div>
+        </div>`).join('');
+    }
+
+    // ── Render Watch List ──
+    function renderWatch(filter = 'all') {
+      const grid = document.getElementById('watchGrid');
+      const items = filter === 'all' ? WATCH_LIST : WATCH_LIST.filter(v => v.status === filter);
+
+      if (!items.length) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="es-icon">🎬</div>
+            <div class="es-title">Your Watch List</div>
+            <div class="es-text">Videos, courses, and talks you are watching or plan to watch will appear here.</div>
+            <div class="es-code">Edit WATCH_LIST in this HTML file to add content</div>
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = items.map(v => `
+        <div class="glass content-card">
+          <span class="tag cat-tag">${v.category}${v.platform ? ' &nbsp;·&nbsp; ' + v.platform : ''}</span>
+          <div class="cc-title">${v.link ? `<a href="${v.link}" target="_blank" rel="noopener" style="color:inherit">${v.title}</a>` : v.title}</div>
+          <div class="cc-sub">${v.creator}</div>
+          ${v.notes ? `<div class="cc-notes">${v.notes}</div>` : ''}
+          <div class="cc-footer">
+            <span class="status-badge s-${v.status}">
+              <span class="status-dot"></span>
+              ${v.status.charAt(0).toUpperCase() + v.status.slice(1)}
+            </span>
+            ${v.link ? `<a href="${v.link}" target="_blank" class="cc-meta" style="text-decoration:none">↗ Open</a>` : ''}
+          </div>
+        </div>`).join('');
+    }
+
+    // ── Filter buttons ──
+    function bindFilters(containerId, renderFn) {
+      document.getElementById(containerId).querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.getElementById(containerId).querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderFn(btn.dataset.filter);
+        });
+      });
+    }
+
+    // ── Init ──
+    renderReading();
+    renderWatch();
+    bindFilters('readingFilters', renderReading);
+    bindFilters('watchFilters', renderWatch);
+
+  </script>
+</body>
+</html>
