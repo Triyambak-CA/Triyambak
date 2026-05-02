@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Indicators & tools published by S Triyambaka Patro - Pine Script indicators for TradingView, with full long-form documentation for each.">
+  <title>Tools & Indicators · S Triyambaka Patro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body class="tools-page">
+
+  <!-- ════════════════ BACKGROUND ════════════════ -->
+  <div class="bg-layer" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-lines"></div>
+  </div>
+  <div id="cursor-glow" aria-hidden="true"></div>
+
+  <!-- ════════════════ NAV ════════════════ -->
+  <nav id="navbar">
+    <a href="/" class="nav-logo" aria-label="S Triyambaka Patro - Home">
+      <span class="logo-badge">
+        <img src="/Photos/ChatGPT Image Dec 16, 2025, 09_36_41 PM.png" alt="S Triyambaka Patro">
+      </span>
+      S Triyambaka Patro
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/#about">About</a></li>
+      <li><a href="/#experience">Experience</a></li>
+      <li><a href="/#practice">Practice</a></li>
+      <li><a href="/#qualifications">Qualifications</a></li>
+      <li><a href="/#skills">Skills</a></li>
+      <li><a href="/tools/" class="active">Tools</a></li>
+      <li><a href="/#reading">Reading</a></li>
+      <li><a href="/#contact">Contact</a></li>
+    </ul>
+    <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" id="closeMenu" aria-label="Close menu">✕</button>
+    <a href="/#about" class="mm-link">About</a>
+    <a href="/#experience" class="mm-link">Experience</a>
+    <a href="/#practice" class="mm-link">Practice</a>
+    <a href="/#qualifications" class="mm-link">Qualifications</a>
+    <a href="/#skills" class="mm-link">Skills</a>
+    <a href="/tools/" class="mm-link">Tools</a>
+    <a href="/#reading" class="mm-link">Reading</a>
+    <a href="/#contact" class="mm-link">Contact</a>
+  </div>
+
+  <main>
+
+    <!-- ════════════════ TOOLS HUB ════════════════ -->
+    <section id="tools-hub" style="padding-top: 140px;">
+      <div class="container">
+        <p class="eyebrow">Tools</p>
+        <h2 class="sec-title">Indicators &amp; <em>Tools</em></h2>
+
+        <p style="font-size: 15.5px; font-weight: 300; color: var(--t2); line-height: 1.85; max-width: 720px; margin-bottom: 44px;">
+          A growing library of Pine Script indicators published on TradingView, each with long-form documentation - formula, inputs, signal interpretation, and how I use them in practice.
+        </p>
+
+        <div class="filter-row" id="toolsFilters">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="published">Published</button>
+          <button class="filter-btn" data-filter="beta">Beta</button>
+          <button class="filter-btn" data-filter="coming-soon">Coming Soon</button>
+        </div>
+
+        <div class="content-grid" id="toolsGrid"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p class="footer-text">© 2026 S Triyambaka Patro · Chartered Accountant · ACA, ICAI</p>
+    <p class="footer-text">New Delhi &amp; Berhampur, Odisha</p>
+  </footer>
+
+  <script>
+
+    /* ══════════════════════════════════════════════════════
+       🛠  TOOLS LIST - Add indicators here
+       ══════════════════════════════════════════════════════
+       TEMPLATE:
+       {
+         name:     "Indicator Name",
+         slug:     "url-slug",                  // matches /tools/<slug>/
+         tagline:  "One-line description for the card.",
+         summary:  "1-2 sentence description, used as the detail page's <meta description> and for SEO/OG.",
+         category: "Volatility | Breadth | Trend | Momentum | Other",
+         status:   "published | beta | coming-soon",
+         tvLink:   "https://www.tradingview.com/script/...",
+         updated:  "Apr 2026",
+       },
+       ══════════════════════════════════════════════════════ */
+
+    const TOOLS_LIST = [
+      {
+        name:     "Relative Measured Volatility (RMV)",
+        slug:     "rmv",
+        tagline:  "Tightness oscillator for spotting compression before breakouts - any tight setup, not just VCP.",
+        summary:  "A 0-100 oscillator that measures price tightness - today's bar versus the loudest of recent prior bars. Built for spotting compression before breakouts on NSE daily charts.",
+        category: "Volatility",
+        status:   "published",
+        tvLink:   "https://www.tradingview.com/script/pPTM0BgL-Relative-Measured-Volatility-RMV-Spot-Tight-Entry-Zones/",
+        updated:  "May 2026",
+      },
+    ];
+
+    /* status → existing badge variant + display label */
+    const STATUS_MAP = {
+      "published":   { cls: "s-completed", label: "Published" },
+      "beta":        { cls: "s-watching",  label: "Beta" },
+      "coming-soon": { cls: "s-queue",     label: "Coming Soon" },
+    };
+
+    function renderTools(filter = 'all') {
+      const grid = document.getElementById('toolsGrid');
+      const items = filter === 'all' ? TOOLS_LIST : TOOLS_LIST.filter(t => t.status === filter);
+
+      if (!items.length) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="es-icon">🛠</div>
+            <div class="es-title">No tools in this view</div>
+            <div class="es-text">Try a different filter, or check back soon.</div>
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = items.map(t => {
+        const s = STATUS_MAP[t.status] || STATUS_MAP['coming-soon'];
+        const detailHref = `/tools/${t.slug}/`;
+        return `
+          <a class="glass content-card tool-card" href="${detailHref}">
+            <span class="tag cat-tag">${t.category}</span>
+            <div class="cc-title">${t.name}</div>
+            <div class="cc-sub">${t.tagline}</div>
+            <div class="cc-footer">
+              <span class="status-badge ${s.cls}">
+                <span class="status-dot"></span>${s.label}
+              </span>
+              <span class="cc-meta">${t.updated || ''}</span>
+            </div>
+          </a>`;
+      }).join('');
+    }
+
+    function bindFilters(containerId, renderFn) {
+      document.getElementById(containerId).querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.getElementById(containerId).querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderFn(btn.dataset.filter);
+        });
+      });
+    }
+
+    /* ── Cursor glow ── */
+    const glow = document.getElementById('cursor-glow');
+    document.addEventListener('mousemove', e => {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top  = e.clientY + 'px';
+    });
+
+    /* ── Mobile menu ── */
+    const hamburger  = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMenu  = document.getElementById('closeMenu');
+    hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
+    closeMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    document.querySelectorAll('.mm-link').forEach(a => {
+      a.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    });
+
+    /* ── Scroll reveal ── */
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -36px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    /* ── Init ── */
+    renderTools();
+    bindFilters('toolsFilters', renderTools);
+
+  </script>
+</body>
+</html>

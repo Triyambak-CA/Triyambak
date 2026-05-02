@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A 0-100 oscillator that measures price tightness - today's bar versus the loudest of recent prior bars. Built for spotting compression before breakouts on NSE daily charts.">
+  <title>Relative Measured Volatility (RMV) · Tools · S Triyambaka Patro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body class="tools-page">
+
+  <!-- ════════════════ BACKGROUND ════════════════ -->
+  <div class="bg-layer" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-lines"></div>
+  </div>
+  <div id="cursor-glow" aria-hidden="true"></div>
+
+  <!-- ════════════════ NAV ════════════════ -->
+  <nav id="navbar">
+    <a href="/" class="nav-logo" aria-label="S Triyambaka Patro - Home">
+      <span class="logo-badge">
+        <img src="/Photos/ChatGPT Image Dec 16, 2025, 09_36_41 PM.png" alt="S Triyambaka Patro">
+      </span>
+      S Triyambaka Patro
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/#about">About</a></li>
+      <li><a href="/#experience">Experience</a></li>
+      <li><a href="/#practice">Practice</a></li>
+      <li><a href="/#qualifications">Qualifications</a></li>
+      <li><a href="/#skills">Skills</a></li>
+      <li><a href="/tools/" class="active">Tools</a></li>
+      <li><a href="/#reading">Reading</a></li>
+      <li><a href="/#contact">Contact</a></li>
+    </ul>
+    <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" id="closeMenu" aria-label="Close menu">✕</button>
+    <a href="/#about" class="mm-link">About</a>
+    <a href="/#experience" class="mm-link">Experience</a>
+    <a href="/#practice" class="mm-link">Practice</a>
+    <a href="/#qualifications" class="mm-link">Qualifications</a>
+    <a href="/#skills" class="mm-link">Skills</a>
+    <a href="/tools/" class="mm-link">Tools</a>
+    <a href="/#reading" class="mm-link">Reading</a>
+    <a href="/#contact" class="mm-link">Contact</a>
+  </div>
+
+  <main>
+
+    <!-- Breadcrumb -->
+    <div class="container" style="padding-top: 110px;">
+      <p class="eyebrow"><a href="/tools/" style="color:inherit">Tools</a> &nbsp;/&nbsp; <span style="color:var(--t2)">Relative Measured Volatility (RMV)</span></p>
+    </div>
+
+    <!-- ════════════════ a. HERO ════════════════ -->
+    <section id="tool-hero" style="padding-top: 32px; padding-bottom: 60px;">
+      <div class="container">
+        <h1 class="sec-title" style="margin-bottom: 18px;">Relative Measured Volatility <em>(RMV)</em></h1>
+        <p class="tool-tagline">A tightness oscillator for spotting compression before breakouts - any tight setup, not just VCP.</p>
+        <div class="tool-meta-row">
+          <span class="status-badge s-completed"><span class="status-dot"></span>Published</span>
+          <span class="tag">Volatility</span>
+          <span class="cc-meta">Last updated: May 2026</span>
+        </div>
+        <div class="hero-actions" style="margin-top: 28px; opacity: 1; animation: none;">
+          <a href="https://www.tradingview.com/script/pPTM0BgL-Relative-Measured-Volatility-RMV-Spot-Tight-Entry-Zones/" class="btn btn-primary" target="_blank" rel="noopener">Open on TradingView ↗</a>
+          <a href="/tools/" class="btn btn-ghost">← All Tools</a>
+        </div>
+        <!-- TODO: add screenshot at tools/rmv/assets/hero.png -->
+      </div>
+    </section>
+
+    <!-- ════════════════ b. WHAT IT IS ════════════════ -->
+    <section id="what-it-is" style="padding: 60px 0;">
+      <div class="container">
+        <p class="eyebrow">Overview</p>
+        <h2 class="sec-title">What it <em>is</em></h2>
+        <div class="glass-flat tool-prose">
+          <p>RMV is a 0-100 oscillator that measures how loud today's bar is versus the strongest of the last few prior bars. Lower values mean compression; higher values mean expansion. The reading is purely about <strong>price tightness</strong> - it does not look at trend, momentum, or relative strength.</p>
+          <p>The gap it fills is narrow but real. Standard ATR or range readings tell you absolute volatility; they don't tell you whether <em>today</em> is compressed relative to its own recent character. Percentile-rank tightness oscillators answer that question, but they have a structural blind spot - a single quiet bar inside a wild stretch can read as "tight" purely because of where it lands in the distribution, not because the bar itself is genuinely small.</p>
+          <p>RMV addresses that by anchoring today's bar against the <strong>loudest</strong> of the last few prior bars, not the typical one. Today is compared to the strongest recent context - and crucially, today's own value is excluded from that baseline so an expansion bar can't dilute itself. The result is a reading that stays honest through both calm and volatile regimes.</p>
+          <p>Built for spotting tightness before breakouts - VCP being the canonical case, but it works on any setup where price compression is the precondition: cup-and-handle, flat bases, ascending triangles, post-IPO bases, anywhere the breakout is preceded by a quiet stretch.</p>
+          <p>Inspired by the broader concept of tightness oscillators; formula and methodology independently designed and validated against NSE data.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ c. READING GUIDE ════════════════ -->
+    <section id="reading-guide" style="padding: 60px 0;">
+      <div class="container">
+        <p class="eyebrow">Reading Guide</p>
+        <h2 class="sec-title">Value scale &amp; <em>signals</em></h2>
+        <div class="glass-flat tool-prose">
+          <h4>The 0-100 scale</h4>
+          <ul>
+            <li><strong>RMV ≤ 20</strong> - very tight. Today's effective size is under 40% of the recent loudest bar.</li>
+            <li><strong>RMV ≈ 50</strong> - neutral. Today is roughly equal to the recent loudest.</li>
+            <li><strong>RMV ≥ 75</strong> - expanding. Today is materially larger than recent context.</li>
+            <li><strong>RMV = 100</strong> - full expansion. Today is at least 2× the recent baseline; the formula caps at 100.</li>
+          </ul>
+          <h4>What to look at on the pane</h4>
+          <p>Three layers carry information at once:</p>
+          <ul>
+            <li>The <strong>histogram</strong> shows the raw RMV value, drawn only when RMV is in the viable zone (≤ <a href="#input-warmLevel">warm level</a>). Above warm, the bar is hidden - that's deliberate; expansion regimes are not the indicator's domain.</li>
+            <li>The <strong>smoothed line</strong> (5-bar SMA of RMV) tells you whether tightness is structural or noise. When the smoothed line stays below the <a href="#input-tightLevel">tight level</a> for several bars, you have real compression - not just one quiet bar inside a noisy stretch.</li>
+            <li>The <strong>background colour and rank digit</strong> (➊➋➌➍) at the top of the pane encode the four-tier signal layer - <a href="#signals">see Signals below</a>.</li>
+          </ul>
+          <p>The live label on the right edge shows the current RMV value plus, when in the tight regime, how many consecutive bars the regime has lasted and the lowest reading during that streak.</p>
+          <!-- TODO: add screenshot at tools/rmv/assets/reading-guide.png -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ d. METHODOLOGY ════════════════ -->
+    <section id="methodology" style="padding: 60px 0;">
+      <div class="container">
+        <p class="eyebrow">Methodology</p>
+        <h2 class="sec-title">Formula in <em>plain English</em></h2>
+
+        <div class="callout">
+          <p>RMV is the ratio of <strong>today's effective size</strong> to a <strong>recent-loudest baseline</strong>, scaled and capped onto 0-100.</p>
+          <div class="formula">numerator   = today's effective size  (body or range, per ladder below)
+denominator = max( ATR(N)[1] , MAX(H − L, N)[1] )       // today excluded
+ratio       = numerator / denominator
+RMV         = min( ratio × 50 , 100 )</div>
+          <p>The two halves - numerator and denominator - each do specific work.</p>
+        </div>
+
+        <div class="glass-flat tool-prose" style="margin-top: 28px;">
+          <h3>The numerator - what counts as "today's size"</h3>
+          <p>A naive choice would be today's full range (high − low). That works most of the time, but it misclassifies two specific bar shapes: bars that are small in absolute terms (a genuinely quiet day with a small range), and rejection bars (a long lower wick that closes near the top - bullish action that the day's <em>range</em> overstates). For both of those, the body is a more honest measure of how much the market actually moved.</p>
+          <p>So the numerator is selected by a three-rule ladder. Evaluated top-down. The first matching rule wins.</p>
+          <table class="input-table wrap-col2">
+            <thead>
+              <tr><th>Step</th><th>Condition</th><th>Numerator</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><strong>Absolute-tightness gate.</strong> Today's range is smaller than <a href="#input-absTightMult"><code>multiplier</code></a> × <a href="#input-absTightAtrLen"><code>ATR(N)</code></a> over the prior N bars (default <code>0.75 × ATR(5)</code>). The bar is small in absolute terms; the body reflects that without being inflated by minor wicks.</td>
+                <td><code>BODY</code></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><strong>Strong-rejection bar.</strong> Evaluated only if step 1 didn't match. Both the open <em>and</em> the close land in the upper portion of the day's range - above the <a href="#input-closePosThreshold">strong rejection threshold</a> (default 50%). A long lower wick with a strong close is intraday rejection, not real volatility - but the rule requires the open to be up there too, so a "rally from the bottom" (open low, close high) is correctly classified as expansion, not tightness.</td>
+                <td><code>BODY</code></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><strong>Otherwise.</strong> Evaluated only if neither 1 nor 2 matched. Real expansion bars and ordinary trending bars both fall here.</td>
+                <td><code>RANGE</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>The denominator - and why "today excluded" matters</h3>
+          <p>The baseline is the <strong>maximum</strong> of two prior-N-bar measurements: the average true range over the last N bars, and the largest single-bar high-minus-low over the last N bars. Both are computed with a one-bar offset - today's bar is not part of either calculation.</p>
+          <p>That offset is load-bearing. An earlier today-inclusive formulation produced a clear failure mode: a real expansion bar in the test data scored zero on RMV - flagged as "tightest in window" - because its own large range inflated the baseline it was being compared against. With today excluded, the expansion bar is anchored against pre-expansion context, and the reading lands where intuition says it should (around 60+).</p>
+          <p>Taking the <strong>max</strong> of ATR and the highest H − L (rather than just ATR) makes the baseline conservative on purpose. Today is compared to the loudest recent bar, not the average one, so the formula doesn't get fooled when the prior window mixes calm and noisy days.</p>
+
+          <h3>Final scaling</h3>
+          <p>The ratio is multiplied by 50 (so a ratio of 1.0 - today equals the recent loudest - maps to RMV = 50) and capped at 100 (a ratio of 2.0+ maps to a full-expansion reading without the value running away).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ e. INPUTS ════════════════ -->
+    <section id="inputs" style="padding: 60px 0;">
+      <div class="container">
+        <p class="eyebrow">Inputs</p>
+        <h2 class="sec-title">Configurable <em>inputs</em></h2>
+        <div class="glass-flat tool-prose">
+
+          <h4>Core RMV engine</h4>
+          <table class="input-table">
+            <thead>
+              <tr><th>Input</th><th>Default</th><th>What it controls</th></tr>
+            </thead>
+            <tbody>
+              <tr id="input-atrLen">
+                <td>ATR baseline length</td>
+                <td>3</td>
+                <td>Window for the tightness baseline, computed over the last N prior bars (today excluded). 3 = matches a tight-scan ATR(3) horizon. 5 = one trading week, smoother. 8 = broader context.</td>
+              </tr>
+              <tr id="input-closePosThreshold">
+                <td>Strong rejection threshold</td>
+                <td>50%</td>
+                <td>A bar qualifies as a strong rejection only when both the open and the close land above this percentage of the day's range. Raise to 60-70% for stricter qualification.</td>
+              </tr>
+              <tr id="input-absTightAtrLen">
+                <td>Absolute-tightness ATR length</td>
+                <td>5</td>
+                <td>Window for the absolute-tightness check - long enough to track regime changes, short enough to stay responsive.</td>
+              </tr>
+              <tr id="input-absTightMult">
+                <td>Absolute-tightness ATR multiplier</td>
+                <td>0.75</td>
+                <td>Strictness of the absolute-tightness gate. Today's range must be ≤ multiplier × ATR(N) prior to qualify. Lower = stricter; 0.5 only counts sharply small bars, 1.0 counts anything at or below recent ATR.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4 style="margin-top: 32px;">Thresholds &amp; zones</h4>
+          <table class="input-table">
+            <thead>
+              <tr><th>Input</th><th>Default</th><th>What it controls</th></tr>
+            </thead>
+            <tbody>
+              <tr id="input-veryTightLevel">
+                <td>Very-tight level</td>
+                <td>10</td>
+                <td>Threshold for the "very tight" crossunder alert.</td>
+              </tr>
+              <tr id="input-tightLevel">
+                <td>Tight level</td>
+                <td>15</td>
+                <td>Upper bound of the tight zone. Used for the A+ eligibility gate, trough/streak tracking, and the tight-zone-entry alert.</td>
+              </tr>
+              <tr id="input-warmLevel">
+                <td>Warm level</td>
+                <td>20</td>
+                <td>Upper bound of histogram visibility and the rank ➍ background. Above warm: no histogram bar, no background fill.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4 style="margin-top: 32px;">A+ setup</h4>
+          <table class="input-table">
+            <thead>
+              <tr><th>Input</th><th>Default</th><th>What it controls</th></tr>
+            </thead>
+            <tbody>
+              <tr id="input-showAplus">
+                <td>Show A+ setup marker</td>
+                <td>On</td>
+                <td>Toggles the A+ background and rank digit.</td>
+              </tr>
+              <tr id="input-aplusMode">
+                <td>A+ trigger mode</td>
+                <td>OR (either scan)</td>
+                <td>Which scan combination must hit for A+ to fire. Options: AND (both scans), OR (either scan), Tightness only, VDU only. A+ also always requires RMV ≤ tight level - the RMV gate is built in.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4 style="margin-top: 32px;">Tightness recognition aids</h4>
+          <table class="input-table">
+            <thead>
+              <tr><th>Input</th><th>Default</th><th>What it controls</th></tr>
+            </thead>
+            <tbody>
+              <tr id="input-smoothLen">
+                <td>RMV smoothing (bars)</td>
+                <td>5</td>
+                <td>SMA length applied to RMV for the smoothed line. Filters single-bar dips so only structural compression shows.</td>
+              </tr>
+              <tr id="input-showSmooth">
+                <td>Show smoothed RMV line</td>
+                <td>On</td>
+                <td>Plots the SMA(RMV) overlay. When it stays below the tight level you have structural tightness.</td>
+              </tr>
+              <tr id="input-showStreakLabel">
+                <td>Show tight-streak label</td>
+                <td>On</td>
+                <td>Adds streak info to the live label - bars in the tight regime, plus the lowest RMV during the streak.</td>
+              </tr>
+              <tr id="input-troughLookback">
+                <td>Trough lookback (bars)</td>
+                <td>5</td>
+                <td>Window for the "lowest RMV in N bars" trough detection - drives rank ➌.</td>
+              </tr>
+              <tr id="input-showTrough">
+                <td>Enable trough detection</td>
+                <td>On</td>
+                <td>Toggles rank ➌ entirely. When off, deepest-compression bars fall to rank ➍.</td>
+              </tr>
+              <tr id="input-showRanks">
+                <td>Show rank labels (1/2/3/4)</td>
+                <td>On</td>
+                <td>Plots a single digit at the top of the pane on each tier-1-4 bar. Useful for screenshots, colour-blind reading, and quick scanning.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4 style="margin-top: 32px;">Colours</h4>
+          <table class="input-table">
+            <thead>
+              <tr><th>Input</th><th>Default</th><th>What it controls</th></tr>
+            </thead>
+            <tbody>
+              <tr id="input-themePreset">
+                <td>Theme preset + per-tier swatches</td>
+                <td>Dark</td>
+                <td>Theme preset switches the entire palette between Dark and Light. The Dark theme exposes individual swatches for histogram, smoothed line, the four background tiers, and the rank digit. Light theme uses a fixed coordinated palette and ignores the custom swatches.</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ f. SIGNALS ════════════════ -->
+    <section id="signals" style="padding: 60px 0;">
+      <div class="container">
+        <p class="eyebrow">Signals</p>
+        <h2 class="sec-title">Tiers, setups &amp; <em>alerts</em></h2>
+        <div class="glass-flat tool-prose">
+
+          <h3>The four-tier rank system</h3>
+          <p>Every bar where RMV is in the viable zone (≤ <a href="#input-warmLevel">warm level</a>) gets one of four tier classifications, encoded as a background colour and a rank digit at the top of the pane. The tiers are mutually exclusive and prioritised top-down.</p>
+          <table class="rank-table">
+            <thead>
+              <tr><th>Rank</th><th>Name</th><th>Colour</th><th>Condition</th><th>What it means</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>➊</td>
+                <td>Confluence</td>
+                <td><span class="swatch" style="background:#FFB7B2;" aria-hidden="true"></span><span style="color:#FFB7B2;">Coral</span></td>
+                <td>A+ <em>and</em> trough fire on the same bar.</td>
+                <td>The rarest tier. Compression has reached its deepest reading in N bars <em>and</em> the scan layer is passing.</td>
+              </tr>
+              <tr>
+                <td>➋</td>
+                <td>A+ only</td>
+                <td><span class="swatch" style="background:#FFF1A1;" aria-hidden="true"></span><span style="color:#FFF1A1;">Butter yellow</span></td>
+                <td>The chosen scan combination passes and RMV is within the <a href="#input-tightLevel">tight gate</a>.</td>
+                <td>Setup is firing without an accompanying trough. Watch-list candidate.</td>
+              </tr>
+              <tr>
+                <td>➌</td>
+                <td>Trough only</td>
+                <td><span class="swatch" style="background:#B5EAD7;" aria-hidden="true"></span><span style="color:#B5EAD7;">Mint</span></td>
+                <td>RMV is the lowest reading over the <a href="#input-troughLookback">trough lookback</a> window.</td>
+                <td>Marks the deepest compression of each cycle. Troughs frequently lead a breakout by 1-3 bars.</td>
+              </tr>
+              <tr>
+                <td>➍</td>
+                <td>Viable</td>
+                <td><span class="swatch" style="background:#E8E8E8;" aria-hidden="true"></span><span style="color:#E8E8E8;">Light grey</span></td>
+                <td>RMV ≤ <a href="#input-warmLevel">warm level</a> but neither A+ nor trough is firing.</td>
+                <td>The regime is right; nothing is firing yet.</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="margin-top: 18px;">RMV &gt; warm level produces no fill and no rank digit - the indicator deliberately stops talking once the regime becomes expansion.</p>
+
+          <h3>The A+ trigger and its mode dropdown</h3>
+          <p>A+ is built on two embedded scans - a Tightness scan and a Volume Dry-Up (VDU) scan - both implemented bar-by-bar inside the indicator. The <a href="#input-aplusMode">mode dropdown</a> controls how they combine:</p>
+          <ul>
+            <li><strong>AND (both scans)</strong> - strictest. Both Tightness and VDU must pass on the same bar. Rare confluence; treat hits as serious.</li>
+            <li><strong>OR (either scan)</strong> - default. Either scan passes. Most lenient combination.</li>
+            <li><strong>Tightness only</strong> - only the Tightness scan must pass.</li>
+            <li><strong>VDU only</strong> - only the VDU scan must pass.</li>
+          </ul>
+          <p>Regardless of mode, A+ <strong>also</strong> requires RMV ≤ <a href="#input-tightLevel">tight level</a> - the RMV-tightness gate is built into the trigger, not optional. Both scan formulas are scoped to the bar-level conditions only; universe filters (price, market cap, liquidity) belong in the screener layer, not the indicator, and have been intentionally omitted.</p>
+
+          <h3>Alerts</h3>
+          <p>Three alert conditions are exposed for use in TradingView's alert dialog:</p>
+          <ul>
+            <li><strong>RMV - tight zone entry</strong> - fires on the bar RMV crosses down through the <a href="#input-tightLevel">tight level</a>. The "we just entered compression" signal.</li>
+            <li><strong>RMV - very tight</strong> - fires on the bar RMV crosses down through the <a href="#input-veryTightLevel">very-tight level</a>. Compression is now deep.</li>
+            <li><strong>RMV - A+ setup formed</strong> - fires on the bar A+ first prints (rising edge), per the chosen mode. Doesn't re-fire on subsequent A+ bars in the same streak.</li>
+          </ul>
+
+          <!-- TODO: add screenshot at tools/rmv/assets/signals.png -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ g. PINE SCREENER ════════════════ -->
+    <section id="screener" style="padding: 60px 0;">
+      <div class="container">
+        <p class="eyebrow">Pine Screener</p>
+        <h2 class="sec-title">Screener <em>exports</em></h2>
+        <div class="glass-flat tool-prose">
+          <p>The indicator exposes ten boolean conditions as 1/0 columns to TradingView's Pine Screener and Data Window. They don't add anything to the chart pane - they exist purely for screening across a watchlist or universe. In Pine Screener, filter on the column's value &gt; 0 to find names matching the scan.</p>
+
+          <table class="input-table wrap-col2">
+            <thead>
+              <tr><th>Column</th><th>Fires when</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Scan: RMV ≤ very tight</td><td>Current RMV is at or below the <a href="#input-veryTightLevel">very-tight level</a> (default 10).</td></tr>
+              <tr><td>Scan: A+ setup</td><td>A+ trigger passes (per the chosen mode) <em>and</em> the built-in RMV ≤ <a href="#input-tightLevel">tight gate</a> is satisfied.</td></tr>
+              <tr><td>Scan: Rank 1 (confluence)</td><td>A+ and trough fire simultaneously on the current bar.</td></tr>
+              <tr><td>Scan: Rank 2 (A+ only)</td><td>A+ fires without an accompanying trough.</td></tr>
+              <tr><td>Scan: Rank 3 (trough only)</td><td>RMV is the lowest reading over the <a href="#input-troughLookback">trough lookback</a>, with no A+ on the bar.</td></tr>
+              <tr><td>Scan: Rank 4 (viable, no signal)</td><td>RMV ≤ <a href="#input-warmLevel">warm level</a> but neither A+ nor trough is firing.</td></tr>
+              <tr><td>Scan: Smoothed bottom + breakout</td><td>The smoothed RMV recently bottomed inside the tight zone and the current RMV has crossed into expansion (≥ 50). Useful for catching the moment compression releases.</td></tr>
+              <tr><td>Scan: Tightness pass</td><td>The embedded Tightness scan passes - independent of A+ mode.</td></tr>
+              <tr><td>Scan: VDU pass</td><td>The embedded VDU (Volume Dry-Up) scan passes - independent of A+ mode.</td></tr>
+              <tr><td>Scan: Both scans pass</td><td>Both Tightness and VDU pass simultaneously, regardless of the A+ mode setting.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ h. HOW I USE IT ════════════════ -->
+    <section id="workflow" style="padding: 60px 0;">
+      <div class="container">
+        <p class="eyebrow">How I Use It</p>
+        <h2 class="sec-title">How I <em>use it</em></h2>
+        <div class="glass-flat tool-prose">
+          <p><strong>Daily timeframe, NSE liquid names.</strong> RMV does its best work on instruments where daily bars are statistically meaningful. Illiquid names produce noisy compression that doesn't tell you much; the indicator's value comes from clean baselines, and clean baselines need real participation.</p>
+
+          <p><strong>RMV is deliberately scoped narrow - it is a setup detector, not a trigger.</strong> The indicator does not look at trend strength, relative leadership, or price-pane structure. Moving averages on price live on a separate price-pane indicator, kept in sync manually. Relative strength and momentum are a separate workflow entirely. RMV's only question is "is today compressed against recent context?" - everything else is read from other layers.</p>
+
+          <p><strong>Read the four-tier signal layer first, then the smoothed line.</strong> <span class="swatch" style="background:#FFB7B2;" aria-hidden="true"></span><span style="color:#FFB7B2;">Coral</span> (➊) and <span class="swatch" style="background:#FFF1A1;" aria-hidden="true"></span><span style="color:#FFF1A1;">yellow</span> (➋) are the top tier - I treat them at roughly the same weight; confluence is rarer, but any A+ firing with RMV inside the tight gate is worth opening the price pane for. <span class="swatch" style="background:#B5EAD7;" aria-hidden="true"></span><span style="color:#B5EAD7;">Mint</span> (➌) is the next read down - deepest compression of the cycle, often leading a breakout by 1-3 bars. <span class="swatch" style="background:#E8E8E8;" aria-hidden="true"></span><span style="color:#E8E8E8;">Grey</span> (➍) is the slow-build state - the regime is right, nothing is firing, but the name is on the radar. The smoothed line is the structure check: when it stays below the tight level for several bars, compression is real, not a single quiet day inside a noisy stretch.</p>
+
+          <p><strong>Entry decisions still happen on the price pane.</strong> RMV tells me a setup is forming or has formed; the actual buy stop, the volume confirmation, and the MA confluence are price-side reads. The pivot-line auto-draw was deliberately removed during development - judging the breakout level visually keeps the discretion in the right place.</p>
+
+          <p><strong>Pine Screener for cross-sectional sweeps.</strong> The 1/0 columns plug directly into TradingView Pine Screener; filter on the column's value &gt; 0 to find names matching the scan. The columns I use most often:</p>
+          <ul>
+            <li><strong>Scan: Rank 1 (confluence)</strong> - for the rare confluence sweep across a watchlist.</li>
+            <li><strong>Scan: A+ setup</strong> - the broader "any A+ fired today" sweep, regardless of trough.</li>
+            <li><strong>Scan: Rank 3 (trough only)</strong> - to find names sitting at deepest compression right now.</li>
+            <li><strong>Scan: Smoothed bottom + breakout</strong> - to catch names where the smoothed RMV recently bottomed inside the tight zone and the current bar has crossed back above neutral - the moment compression releases.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ i. CHANGE LOG ════════════════ -->
+    <section id="changelog" style="padding: 60px 0;">
+      <div class="container">
+        <p class="eyebrow">Change Log</p>
+        <h2 class="sec-title">Version <em>history</em></h2>
+        <ol class="changelog">
+          <li class="cl-item">
+            <span class="cl-version">v2.0</span>
+            <span class="cl-date">May 2026</span>
+            <div class="cl-body">Hybrid body/range numerator with absolute-tightness gate and strong-rejection rule. Today-exclusive baseline (max of ATR(N) and N-bar high-low range). Four-tier rank system, A+ scan integration (Tightness + VDU), Pine Screener exports.</div>
+          </li>
+          <li class="cl-item">
+            <span class="cl-version">v1.0</span>
+            <span class="cl-date">28 Oct 2024</span>
+            <div class="cl-body">Initial public release.</div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ════════════════ j. DISCLAIMER ════════════════ -->
+    <section id="disclaimer" style="padding: 60px 0 100px;">
+      <div class="container">
+        <p class="eyebrow">Disclaimer</p>
+        <div class="glass-flat tool-prose" style="font-size: 13px; color: var(--t3);">
+          For educational purposes only. Not investment advice. Past performance does not guarantee future results.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p class="footer-text">© 2026 S Triyambaka Patro · Chartered Accountant · ACA, ICAI</p>
+    <p class="footer-text">New Delhi &amp; Berhampur, Odisha</p>
+  </footer>
+
+  <script>
+    /* ── Cursor glow ── */
+    const glow = document.getElementById('cursor-glow');
+    document.addEventListener('mousemove', e => {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top  = e.clientY + 'px';
+    });
+
+    /* ── Mobile menu ── */
+    const hamburger  = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMenu  = document.getElementById('closeMenu');
+    hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
+    closeMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    document.querySelectorAll('.mm-link').forEach(a => {
+      a.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    });
+
+    /* ── Scroll reveal ── */
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -36px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+  </script>
+</body>
+</html>
