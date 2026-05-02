@@ -117,11 +117,16 @@
       letter-spacing: 0.03em;
     }
     .logo-badge {
-      width: 34px; height: 34px; border-radius: 9px;
-      background: rgba(255,255,255,0.055); border: 1px solid var(--border-h);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-m); font-size: 11px; letter-spacing: 0.05em;
-      color: var(--t2);
+      width: 38px; height: 38px; border-radius: 50%;
+      border: 1px solid var(--border-h);
+      overflow: hidden; flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+    }
+    .logo-badge img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      filter: contrast(1.06) brightness(0.92);
+      display: block;
     }
 
     .nav-links {
@@ -675,9 +680,11 @@
 
   <!-- ════════════════ NAV ════════════════ -->
   <nav id="navbar">
-    <a href="#hero" class="nav-logo">
-      <span class="logo-badge">STP</span>
-      Triyambaka Patro
+    <a href="#hero" class="nav-logo" aria-label="S Triyambaka Patro — Home">
+      <span class="logo-badge">
+        <img src="Photos/ChatGPT Image Dec 16, 2025, 09_36_41 PM.png" alt="S Triyambaka Patro">
+      </span>
+      S Triyambaka Patro
     </a>
     <ul class="nav-links" id="navLinks">
       <li><a href="#about">About</a></li>
