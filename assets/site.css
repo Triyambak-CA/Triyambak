@@ -656,6 +656,9 @@
       .stats-bar { grid-template-columns: 1fr 1fr; }
       footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px; }
     }
+    @media (max-width: 480px) {
+      .tl-period { white-space: normal; }
+    }
 
 /* ═══════════════════════════════════════════════════════════════════
    TOOLS SECTION ADDITIONS
