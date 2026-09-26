@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A hands-on 3D lab: turn the dial and take a file apart, from the icon you click down to the bytes on the disk.">
+  <title>Inside a File · Playground · S Triyambaka Patro</title>
+  <link rel="canonical" href="https://triyambak.in/playground/inside-a-file/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="S Triyambaka Patro">
+  <meta property="og:title" content="Inside a File">
+  <meta property="og:description" content="A hands-on 3D lab: turn the dial and take a file apart, from the icon you click down to the bytes on the disk.">
+  <meta property="og:url" content="https://triyambak.in/playground/inside-a-file/">
+  <meta property="og:image" content="https://triyambak.in/playground/inside-a-file/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A 3D workbench taking a file apart: file icon, folder register, index card, a rack of disk boxes, bytes on a conveyor and a reader machine.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@Triyambak_CA">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body class="tools-page">
+
+  <!-- ════════════════ BACKGROUND ════════════════ -->
+  <div class="bg-layer" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-lines"></div>
+  </div>
+  <div id="cursor-glow" aria-hidden="true"></div>
+
+  <!-- ════════════════ NAV ════════════════ -->
+  <nav id="navbar">
+    <a href="/" class="nav-logo" aria-label="S Triyambaka Patro - Home">
+      <span class="logo-badge">
+        <img src="/Photos/ChatGPT Image Dec 16, 2025, 09_36_41 PM.png" alt="S Triyambaka Patro">
+      </span>
+      S Triyambaka Patro
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/#about">About</a></li>
+      <li><a href="/#experience">Experience</a></li>
+      <li><a href="/#practice">Practice</a></li>
+      <li><a href="/#qualifications">Qualifications</a></li>
+      <li><a href="/#skills">Skills</a></li>
+      <li><a href="/tools/">Tools</a></li>
+      <li><a href="/playground/" class="active">Playground</a></li>
+      <li><a href="/#reading">Reading</a></li>
+      <li><a href="/#contact">Contact</a></li>
+    </ul>
+    <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" id="closeMenu" aria-label="Close menu">✕</button>
+    <a href="/#about" class="mm-link">About</a>
+    <a href="/#experience" class="mm-link">Experience</a>
+    <a href="/#practice" class="mm-link">Practice</a>
+    <a href="/#qualifications" class="mm-link">Qualifications</a>
+    <a href="/#skills" class="mm-link">Skills</a>
+    <a href="/tools/" class="mm-link">Tools</a>
+    <a href="/playground/" class="mm-link">Playground</a>
+    <a href="/#reading" class="mm-link">Reading</a>
+    <a href="/#contact" class="mm-link">Contact</a>
+  </div>
+
+  <main>
+
+    <!-- Breadcrumb -->
+    <div class="container" style="padding-top: 110px;">
+      <p class="eyebrow"><a href="/playground/" style="color:inherit">Playground</a> &nbsp;/&nbsp; <span style="color:var(--t2)">Inside a File</span></p>
+    </div>
+
+    <!-- ════════════════ HERO ════════════════ -->
+    <section id="pg-hero" style="padding-top: 32px; padding-bottom: 40px;">
+      <div class="container">
+        <h1 class="sec-title" style="margin-bottom: 18px;">Inside a <em>File</em></h1>
+        <p class="tool-tagline">Everyone double-clicks files. Almost nobody has seen what one is made of. Turn the dial and take one apart.</p>
+        <div class="tool-meta-row">
+          <span class="status-badge s-completed"><span class="status-dot"></span>Live</span>
+          <span class="tag">3D lab</span>
+          <span class="cc-meta">Last updated: 26 Sep 2026</span>
+        </div>
+        <div class="hero-actions" style="margin-top: 28px; opacity: 1; animation: none;">
+          <a href="lab.html" class="btn btn-primary">Open the lab →</a>
+          <a href="/playground/" class="btn btn-ghost">← All experiments</a>
+        </div>
+        <p class="cc-meta" style="margin-top: 14px;">Best on a laptop. Needs a browser that can draw 3D (any recent Chrome, Safari, Edge or Firefox).</p>
+
+        <div class="pg-media" style="margin-top: 40px;">
+          <video id="tourVideo" src="tour.mp4" poster="og.png" autoplay muted loop playsinline controls preload="metadata"
+                 aria-label="The lab's built-in tour: the camera moves from the file icon to the folder register, the index card, the disk boxes, and the bytes, then reads them as text, a picture and a program."></video>
+        </div>
+        <p class="pg-caption">The lab's built-in tour, recorded frame by frame. 85 seconds, no sound.</p>
+      </div>
+    </section>
+
+    <!-- ════════════════ WHAT IT IS ════════════════ -->
+    <section id="what-it-is" style="padding: 60px 0;">
+      <div class="container">
+        <p class="eyebrow">Overview</p>
+        <h2 class="sec-title">What it <em>is</em></h2>
+        <div class="glass-flat tool-prose">
+          <p>A workbench with five stations. Each one peels away a layer of what a file really is.</p>
+          <ol>
+            <li><strong>The icon.</strong> What you see in Finder. Neither the icon nor the name is stored inside the file.</li>
+            <li><strong>The folder.</strong> A register of names, each pointing to the number of an index card.</li>
+            <li><strong>The index card.</strong> Computers call it an inode. It holds the file's size, owner, permissions, and which disk boxes hold the contents.</li>
+            <li><strong>The disk.</strong> A rack of numbered boxes, 4,096 bytes each.</li>
+            <li><strong>The bytes.</strong> Numbers from 0 to 255, each made of 8 on/off switches.</li>
+          </ol>
+          <p>At the end of the bench, a reader machine shows the big idea: the same bytes mean different things depending on what reads them. Read them as text, paint them as a picture, or hand them to the chip as a program.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ HOW TO USE IT ════════════════ -->
+    <section id="how-to-use" style="padding: 60px 0;">
+      <div class="container">
+        <p class="eyebrow">How to use it</p>
+        <h2 class="sec-title">Turn, pick, <em>read</em></h2>
+        <div class="glass-flat tool-prose">
+          <ul>
+            <li><strong>Move between stations:</strong> turn the dial at the bottom left, drag across the scene, scroll, or press the keys 0 to 5.</li>
+            <li><strong>Pick a file:</strong> a short note, a small photo, or <code>ls</code>, a real program that ships with every Mac.</li>
+            <li><strong>Switch the reader:</strong> read the same bytes as text, as a picture, or as a program (keys T, P and R).</li>
+            <li><strong>Watch the tour:</strong> press Play the tour (or Space) to watch it like a video. Touch anything to take over.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ WHAT IS REAL ════════════════ -->
+    <section id="what-is-real" style="padding: 60px 0;">
+      <div class="container">
+        <p class="eyebrow">The numbers</p>
+        <h2 class="sec-title">What is <em>real</em></h2>
+        <div class="callout tool-prose">
+          <p>Every byte, size and box count comes from real files, measured on my Mac on 26 Sep 2026.</p>
+          <ul>
+            <li><strong>note.txt</strong> is 28 bytes. It still reserves one whole 4,096-byte box.</li>
+            <li><strong>photo.jpg</strong> is 5,013 bytes in 2 boxes. It starts <code>FF D8 FF</code>, the mark of a JPEG, and read as text it gives away labels like JFIF and Photoshop.</li>
+            <li><strong>ls</strong> is 154,624 bytes, yet it sits in just 9 boxes, because macOS stores its own programs compressed. It starts <code>CA FE BA BE</code>, the mark of a Mac program carrying two editions: one for Intel chips, one for Apple chips.</li>
+            <li>The Terminal messages, "command not found" and "exec format error", are what Terminal really printed.</li>
+          </ul>
+          <p>Only the positions of the boxes on the rack are drawn for illustration.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ HOW IT WAS MADE ════════════════ -->
+    <section id="how-it-was-made" style="padding: 60px 0 108px;">
+      <div class="container">
+        <p class="eyebrow">Behind it</p>
+        <h2 class="sec-title">How it was <em>made</em></h2>
+        <div class="glass-flat tool-prose">
+          <p>One HTML file of about 90 KB, built with Claude Code. The 3D scene uses <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a>, and every object in it is made in code: no images, no 3D models.</p>
+          <p>The idea came from Ryan Sael's <a href="https://lens.lab.sael.net" target="_blank" rel="noopener">interactive lens lab</a>, which explains camera focus the same hands-on way.</p>
+        </div>
+        <div class="hero-actions" style="margin-top: 36px; opacity: 1; animation: none;">
+          <a href="lab.html" class="btn btn-primary">Open the lab →</a>
+          <a href="/playground/" class="btn btn-ghost">← All experiments</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p class="footer-text">© 2026 S Triyambaka Patro · Chartered Accountant · ACA, ICAI</p>
+    <p class="footer-text">New Delhi &amp; Berhampur, Odisha</p>
+  </footer>
+
+  <script>
+    /* ── Cursor glow ── */
+    const glow = document.getElementById('cursor-glow');
+    document.addEventListener('mousemove', e => {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top  = e.clientY + 'px';
+    });
+
+    /* ── Mobile menu ── */
+    const hamburger  = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMenu  = document.getElementById('closeMenu');
+    hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
+    closeMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    document.querySelectorAll('.mm-link').forEach(a => {
+      a.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    });
+
+    /* ── Scroll reveal ── */
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -36px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    /* ── Respect reduced motion: no autoplaying video ── */
+    try {
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const v = document.getElementById('tourVideo');
+        v.removeAttribute('autoplay'); v.pause();
+      }
+    } catch (e) {}
+  </script>
+</body>
+</html>

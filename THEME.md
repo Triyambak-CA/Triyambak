@@ -120,6 +120,24 @@ Components introduced for `/tools/` hub and `/tools/<slug>/` detail pages. All b
 
 ---
 
+## Playground Section Additions
+
+Components for the `/playground/` hub and `/playground/<slug>/` cover pages. Tokens only; no new colours, fonts or radii.
+
+| Class | Purpose |
+|---|---|
+| `.pg-card` | Modifier on `.glass.content-card.tool-card` for hub cards: removes the card padding so a preview image can run edge to edge. |
+| `.pg-thumb` | The card's preview image, 1200×630 aspect (the same file as the page's `og.png`), with a bottom divider. |
+| `.pg-body` | Padded column under the thumbnail holding the tag, title, notes and footer. Keeps the category `.tag` at its natural width. |
+| `.pg-media` | Rounded, bordered frame for a looping demo video or screenshot on a cover page. |
+| `.pg-caption` | Mono caption under `.pg-media`. |
+
+**Status mapping for Playground:** `live` → `s-completed`, `beta` → `s-watching`, `coming-soon` → `s-queue`.
+
+Each experiment is a folder `/playground/<slug>/` with a themed cover page (`index.html`) and, when the experiment is a full-screen app with its own look, the app itself beside it (e.g. `lab.html`), copied in unchanged. The cover page carries the Open Graph tags, so links shared on LinkedIn or X show a preview card.
+
+---
+
 ## Light Effects (in use)
 
 - Background orbs: three blurred radial gradients (`filter: blur(110px)`) drifting on long alternating animations.
