@@ -634,10 +634,12 @@
     /* ─────────────────────────────────────────
        RESPONSIVE
     ───────────────────────────────────────── */
-    @media (max-width: 960px) {
+    @media (max-width: 1044px) {
       nav { padding: 0 24px; }
       .nav-links { display: none; }
       .nav-hamburger { display: flex; }
+    }
+    @media (max-width: 960px) {
       .container { padding: 0 24px; }
       .hero-inner { grid-template-columns: 1fr; gap: 48px; }
       .hero-photo-wrap { max-width: 270px; margin: 0 auto; }
