@@ -1,0 +1,1158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Byte Sorting Office · S Triyambaka Patro</title>
+<meta name="description" content="How a Mac stores files, and what a binary really is, told as a post office sorting room with real numbers from my own Mac.">
+<link rel="canonical" href="https://triyambak.in/playground/byte-sorting-office/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="S Triyambaka Patro">
+<meta property="og:title" content="Byte Sorting Office">
+<meta property="og:description" content="How a Mac stores files, and what a binary really is, told as a post office sorting room with real numbers from my own Mac.">
+<meta property="og:url" content="https://triyambak.in/playground/byte-sorting-office/">
+<meta property="og:image" content="https://triyambak.in/playground/byte-sorting-office/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@Triyambak_CA">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wdth,wght@75..125,300..700&family=Courier+Prime:wght@400;700&family=Rozha+One&display=swap">
+<style>
+/* Palette: airmail paper, navy ink, violet franking ink, post-box red. */
+:root{
+  --ground:#DDE3EB;
+  --lines:rgba(42,75,152,.06);
+  --sheet:#F7F9FB;
+  --manila:#EFE4C6;
+  --manila-line:rgba(120,90,30,.18);
+  --ink:#1A2240;
+  --ink-2:#48506E;
+  --ink-3:#747C97;
+  --rule:#BFC8D5;
+  --violet:#5A3D9E;
+  --violet-soft:rgba(90,61,158,.11);
+  --red:#C3262F;
+  --red-soft:rgba(195,38,47,.13);
+  --on-red:#FFFFFF;
+  --air:#2A4B98;
+  --box:#FFFFFF;
+  --box-edge:#C9D1DD;
+  --box-used:#B3BDD0;
+  --box-free:repeating-linear-gradient(135deg,rgba(116,124,151,.35) 0 2px,transparent 2px 5px);
+  --shadow:0 1px 0 rgba(26,34,64,.05),0 14px 30px -18px rgba(26,34,64,.45);
+  --blend:multiply;
+  --display:"Rozha One","Bodoni 72",Didot,"Times New Roman",serif;
+  --body:"Anek Latin","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --mono:"Courier Prime","Courier New",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0C1020;
+    --lines:rgba(124,152,240,.05);
+    --sheet:#141A2C;
+    --manila:#29241A;
+    --manila-line:rgba(230,200,140,.12);
+    --ink:#E6E9F3;
+    --ink-2:#AAB1C9;
+    --ink-3:#7A829E;
+    --rule:#2A3350;
+    --violet:#AE98FF;
+    --violet-soft:rgba(174,152,255,.13);
+    --red:#FF5E66;
+    --red-soft:rgba(255,94,102,.16);
+    --on-red:#1A0A0C;
+    --air:#7E9AF0;
+    --box:#1A2136;
+    --box-edge:#2C3552;
+    --box-used:#3C4768;
+    --box-free:repeating-linear-gradient(135deg,rgba(170,177,201,.28) 0 2px,transparent 2px 5px);
+    --shadow:0 16px 34px -16px rgba(0,0,0,.7);
+    --blend:screen;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0C1020;
+  --lines:rgba(124,152,240,.05);
+  --sheet:#141A2C;
+  --manila:#29241A;
+  --manila-line:rgba(230,200,140,.12);
+  --ink:#E6E9F3;
+  --ink-2:#AAB1C9;
+  --ink-3:#7A829E;
+  --rule:#2A3350;
+  --violet:#AE98FF;
+  --violet-soft:rgba(174,152,255,.13);
+  --red:#FF5E66;
+  --red-soft:rgba(255,94,102,.16);
+  --on-red:#1A0A0C;
+  --air:#7E9AF0;
+  --box:#1A2136;
+  --box-edge:#2C3552;
+  --box-used:#3C4768;
+  --box-free:repeating-linear-gradient(135deg,rgba(170,177,201,.28) 0 2px,transparent 2px 5px);
+  --shadow:0 16px 34px -16px rgba(0,0,0,.7);
+  --blend:screen;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{overflow-x:clip;-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:
+    repeating-linear-gradient(0deg,transparent 0 31px,var(--lines) 31px 32px),
+    var(--ground);
+  color:var(--ink);
+  font:400 1.075rem/1.6 var(--body);
+  font-variation-settings:"wdth" 100;
+}
+::selection{background:var(--violet);color:var(--sheet)}
+:focus-visible{outline:2px solid var(--violet);outline-offset:3px;border-radius:2px}
+.wrap{max-width:1060px;margin:0 auto;padding-inline:20px;padding-block:28px 80px}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-wrap:balance;margin:0;letter-spacing:.005em}
+p{margin:0 0 .8em}
+code,.mono{font-family:var(--mono)}
+code{font-size:.92em;background:var(--violet-soft);padding:.05em .35em;border-radius:3px;overflow-wrap:anywhere}
+.measure{max-width:64ch}
+.quiet{color:var(--ink-2)}
+.tiny{font-size:.86rem;color:var(--ink-3)}
+.eyebrow{
+  font-family:var(--mono);font-weight:700;font-size:.78rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--violet);
+}
+
+/* ---------- Hero: the airmail envelope ---------- */
+.envelope{
+  position:relative;
+  background:var(--sheet);
+  border:12px solid transparent;
+  border-image:repeating-linear-gradient(-45deg,var(--red) 0 14px,var(--sheet) 14px 21px,var(--air) 21px 35px,var(--sheet) 35px 42px) 12;
+  box-shadow:var(--shadow);
+  padding:clamp(20px,4vw,44px);
+}
+.hero-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:start}
+.hero h1{font-size:clamp(2.5rem,6.6vw,5rem);line-height:.98;margin:10px 0 18px;color:var(--ink)}
+.hero h1 em{font-style:normal;color:var(--red)}
+.lede{font-size:clamp(1.1rem,1.6vw,1.24rem);line-height:1.55;max-width:60ch}
+.postmark{width:clamp(120px,17vw,190px);height:auto;transform:rotate(-11deg);mix-blend-mode:var(--blend);flex:none}
+.postmark text{font-family:var(--mono);font-weight:700;fill:var(--violet)}
+.postmark .deva{font-family:var(--display);font-weight:400}
+
+/* The rack */
+.rack-zone{margin-top:30px;display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:26px;align-items:start}
+.rack-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 16px;margin-bottom:10px}
+.rack-head h3{font-size:1.45rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px;padding:0;list-style:none}
+.chip{
+  font:700 .82rem/1 var(--mono);letter-spacing:.02em;
+  padding:8px 10px;border-radius:3px;cursor:pointer;
+  background:transparent;color:var(--ink);border:1.5px solid var(--rule);
+  transition:background .15s,border-color .15s,color .15s;
+}
+.chip:hover{border-color:var(--ink-3)}
+.chip[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:var(--on-red)}
+.chip .n{font-weight:400;opacity:.75;margin-left:4px}
+.rack{
+  display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:3px;
+  padding:10px;background:var(--ground);border:1.5px solid var(--rule);border-radius:2px;
+}
+.box{
+  aspect-ratio:1;max-width:100%;background:var(--box);border:1px solid var(--box-edge);border-radius:1px;
+  transition:background .25s,border-color .25s,transform .25s;
+}
+.box.used{background:var(--box-used);border-color:var(--box-used)}
+.box.hit{background:var(--red);border-color:var(--red);transform:scale(1.06)}
+.rack-note{margin-top:8px}
+.overflow{
+  margin-top:10px;padding:10px 12px;border-left:4px solid var(--red);background:var(--red-soft);
+  font-size:.98rem;
+}
+
+/* Index card (inode) */
+.card{
+  background:var(--manila);
+  border-top:5px solid var(--red);
+  padding:14px 16px 16px;box-shadow:var(--shadow);border-radius:2px;
+  font-family:var(--mono);color:var(--ink);
+}
+.card h4{margin:0 0 2px;font:700 .78rem/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.card .sub{font:400 .8rem/1.35 var(--body);color:var(--ink-2);margin-bottom:10px}
+.card dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;font-size:.9rem;line-height:1.5}
+.card dt,.card dd{padding:5px 0;border-bottom:1px solid var(--manila-line)}
+.card dt{color:var(--ink-2)}
+.card dd{margin:0;font-weight:700;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+
+/* ---------- Counters ---------- */
+.counter{margin-top:64px}
+.counter-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-bottom:16px}
+.plate{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--red);color:var(--on-red);
+  font:700 .76rem/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+  padding:8px 11px 7px;border-radius:2px;
+  box-shadow:inset 0 0 0 2px var(--red),inset 0 0 0 3px var(--on-red);
+}
+.plate b{font-family:var(--display);font-weight:400;font-size:1.25rem;letter-spacing:0;line-height:.6}
+.counter h2{font-size:clamp(1.8rem,3.4vw,2.6rem);line-height:1.05;flex:1 1 320px}
+.desk{
+  background:var(--sheet);box-shadow:var(--shadow);border-radius:2px;
+  padding:clamp(16px,3vw,28px);margin-top:18px;
+}
+.desk-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:24px;align-items:start}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.btn{
+  font:700 .86rem/1 var(--body);letter-spacing:.02em;
+  padding:10px 14px;border-radius:3px;cursor:pointer;
+  border:1.5px solid var(--ink);background:var(--sheet);color:var(--ink);
+}
+.btn:hover{background:var(--violet-soft)}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--sheet)}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.primary{background:var(--red);border-color:var(--red);color:var(--on-red)}
+.btn.primary:hover{filter:brightness(1.07)}
+.say{
+  border-left:4px solid var(--violet);background:var(--violet-soft);
+  padding:12px 14px;border-radius:0 3px 3px 0;min-height:4.8em;
+}
+.say strong{color:var(--ink)}
+
+/* Counter 1: address + register */
+.address{
+  display:flex;flex-wrap:wrap;gap:2px;align-items:center;
+  font:700 clamp(.9rem,1.8vw,1.1rem)/1.2 var(--mono);margin-bottom:14px;
+}
+.address span{padding:6px 7px;border-radius:2px;color:var(--ink-3);transition:background .2s,color .2s}
+.address span.done{color:var(--ink)}
+.address span.now{background:var(--red);color:var(--on-red)}
+.address .sep{padding:6px 0;color:var(--ink-3)}
+.register{
+  border:1.5px solid var(--rule);border-radius:2px;background:var(--box);
+  font-family:var(--mono);font-size:.92rem;
+}
+.register .reg-title{
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  padding:8px 12px;border-bottom:1.5px solid var(--rule);
+  font-weight:700;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);
+}
+.register ol{list-style:none;margin:0;padding:4px 0;max-height:none}
+.register li{display:flex;justify-content:space-between;gap:12px;padding:3px 12px;border-bottom:1px dashed var(--rule)}
+.register li:last-child{border-bottom:0}
+.register li.match{background:var(--red-soft);font-weight:700}
+.register li.match .num{color:var(--red)}
+.register li.struck .nm{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--red);color:var(--ink-3)}
+.register li.fresh{animation:inkin .6s ease-out}
+.register .num{color:var(--ink-3);font-variant-numeric:tabular-nums;white-space:nowrap}
+.register .nm{overflow-wrap:anywhere}
+@keyframes inkin{from{background:var(--violet-soft)}to{background:transparent}}
+
+/* Counter 2: clerk mini rack */
+.mini{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px;margin-top:12px}
+.mini .box{position:relative;display:grid;place-items:center;font:700 .66rem/1 var(--mono);color:var(--on-red)}
+.mini .box.a{background:var(--air);border-color:var(--air)}
+.mini .box.b{background:var(--violet);border-color:var(--violet)}
+.mini .box.c{background:var(--red);border-color:var(--red)}
+.mini .box.freed{background:var(--box-free),var(--box);border-style:dashed;border-color:var(--ink-3);color:var(--ink-3)}
+.mini .box.shared{outline:2px solid var(--ink);outline-offset:1px}
+.mini-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:.84rem;color:var(--ink-2)}
+.mini-legend i{display:inline-block;width:12px;height:12px;vertical-align:-1px;margin-right:5px;border-radius:1px}
+.slip{
+  margin-top:10px;padding:8px 10px;border:1.5px dashed var(--violet);color:var(--violet);
+  font:700 .84rem/1.45 var(--mono);overflow-wrap:anywhere;border-radius:2px;
+}
+
+/* Counter 3: switchboard */
+.switches{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px;max-width:560px}
+.sw{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  background:none;border:0;padding:0;cursor:pointer;color:var(--ink);font:inherit;
+}
+.sw .lamp{
+  width:100%;max-width:100%;aspect-ratio:3/4;border-radius:3px;border:2px solid var(--ink);
+  background:var(--box);position:relative;transition:background .15s;
+}
+.sw .lamp::after{
+  content:"";position:absolute;left:18%;right:18%;height:38%;border-radius:2px;
+  background:var(--ink);top:52%;transition:top .15s,background .15s;
+}
+.sw[aria-pressed="true"] .lamp{background:var(--red-soft)}
+.sw[aria-pressed="true"] .lamp::after{top:10%;background:var(--red)}
+.sw .bit{font:700 1.05rem/1 var(--mono)}
+.sw .pv{font:400 .72rem/1 var(--mono);color:var(--ink-3)}
+.readings{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+.reading{border-top:2px solid var(--ink);padding-top:8px;min-width:0}
+.reading .k{font:700 .72rem/1.2 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.reading .v{font:400 clamp(1.7rem,3.4vw,2.4rem)/1.15 var(--display);margin-top:4px;overflow-wrap:anywhere}
+.reading .v.mono{font-family:var(--mono);font-weight:700}
+.reading .d{font-size:.84rem;color:var(--ink-2);margin-top:2px}
+.swatch{width:100%;height:44px;border:1.5px solid var(--rule);border-radius:2px;margin-top:6px}
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+
+/* Counter 4: hex strips */
+.strip{margin-top:14px}
+.strip-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 14px;align-items:baseline;margin-bottom:6px}
+.strip-head b{font:700 .95rem/1.2 var(--mono)}
+.bytes{
+  display:grid;grid-template-columns:repeat(16,minmax(2.1em,1fr));gap:3px;
+  font:700 .9rem/1 var(--mono);min-width:560px;
+}
+.bytes-scroll{overflow-x:auto;padding-bottom:4px}
+.byte{
+  display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0 5px;
+  border:1px solid var(--rule);border-radius:2px;background:var(--box);cursor:default;
+}
+.byte .h{color:var(--ink)}
+.byte .c{color:var(--violet);font-weight:700;min-height:1em}
+.byte .c.dot{color:var(--ink-3)}
+.byte:hover,.byte.lit{border-color:var(--red);background:var(--red-soft)}
+.bytes.hide-letters .c{visibility:hidden}
+.toggle{display:inline-flex;align-items:center;gap:8px;font-weight:600;cursor:pointer;user-select:none}
+.toggle input{width:18px;height:18px;accent-color:var(--red)}
+
+/* Counter 5: postmarks */
+.pm-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:22px;align-items:start}
+.pm-list{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.pm-item{
+  display:flex;justify-content:space-between;gap:10px;align-items:center;width:100%;
+  text-align:left;font:600 .98rem/1.2 var(--body);color:var(--ink);
+  padding:10px 12px;border:1.5px solid var(--rule);background:var(--box);border-radius:3px;cursor:pointer;
+}
+.pm-item .mono{font-size:.82rem;color:var(--ink-3);font-weight:700}
+.pm-item[aria-pressed="true"]{border-color:var(--violet);box-shadow:inset 4px 0 0 var(--violet)}
+.pm-item[aria-pressed="true"] .mono{color:var(--violet)}
+.cancel{
+  position:relative;padding:18px 18px 16px;border:2.5px solid var(--violet);border-radius:6px;
+  color:var(--ink);background:var(--violet-soft);
+}
+.cancel .big{
+  font:700 clamp(1.6rem,4.4vw,2.6rem)/1.1 var(--mono);color:var(--violet);letter-spacing:.04em;
+  overflow-wrap:anywhere;
+}
+.cancel .spell{font:700 1rem/1.4 var(--mono);color:var(--ink-2);margin:6px 0 12px;overflow-wrap:anywhere}
+.cancel h3{font-size:1.5rem;margin-bottom:6px}
+.cancel .where{margin-top:10px;font-size:.92rem;color:var(--ink-2)}
+.cancel .wave{position:absolute;right:12px;top:12px;width:70px;height:34px;opacity:.55}
+
+/* Counter 6: chip languages + table */
+.chipswap{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1.1fr);gap:10px;align-items:center}
+.step-box{border:1.5px solid var(--rule);background:var(--box);padding:12px;border-radius:3px;min-width:0}
+.step-box .k{font:700 .72rem/1.2 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);margin-bottom:6px}
+.step-box .v{font:700 1.02rem/1.4 var(--mono);overflow-wrap:anywhere}
+.step-box.out .v{font-size:clamp(1.3rem,3vw,1.8rem);color:var(--red)}
+.arrow{font:400 1.6rem/1 var(--display);color:var(--ink-3);text-align:center}
+.tbl-scroll{overflow-x:auto;margin-top:22px}
+table.cmp{border-collapse:collapse;width:100%;min-width:560px;font-size:.96rem}
+.cmp th,.cmp td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+.cmp thead th{font:700 .76rem/1.2 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);border-bottom:2px solid var(--ink)}
+.cmp tbody th{font-weight:600;color:var(--ink-2);width:24%}
+.cmp td code{white-space:nowrap}
+
+/* Counter 7: PATH */
+.path-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px;align-items:start}
+.prompt{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  font:700 1.05rem/1 var(--mono);margin-bottom:12px;
+}
+.prompt .ps{color:var(--violet)}
+.prompt select{
+  font:700 1rem/1 var(--mono);color:var(--ink);background:var(--box);
+  border:1.5px solid var(--ink);border-radius:3px;padding:8px 10px;
+}
+.pathlist{list-style:none;margin:0;padding:0;font:400 .88rem/1.25 var(--mono);counter-reset:none}
+.pathlist li{
+  display:grid;grid-template-columns:2.2em minmax(0,1fr) auto;gap:8px;align-items:center;
+  padding:5px 8px;border-bottom:1px dashed var(--rule);transition:background .2s,color .2s;
+}
+.pathlist .ix{color:var(--ink-3);text-align:right;font-variant-numeric:tabular-nums}
+.pathlist .dir{overflow-wrap:anywhere}
+.pathlist .tag{font:700 .7rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:4px 6px;border-radius:2px;white-space:nowrap}
+.pathlist li.checking{background:var(--violet-soft)}
+.pathlist li.miss .dir{color:var(--ink-3)}
+.pathlist li.win{background:var(--red-soft)}
+.pathlist li.win .dir{font-weight:700}
+.pathlist li.win .tag{background:var(--red);color:var(--on-red)}
+.pathlist li.shadow .tag{border:1.5px solid var(--ink-3);color:var(--ink-2)}
+.pathlist li.skip{opacity:.55}
+.result{font:700 1rem/1.5 var(--mono);padding:12px 14px;border:1.5px solid var(--ink);border-radius:3px;background:var(--box);overflow-wrap:anywhere}
+.result.nf{border-color:var(--red);color:var(--red)}
+
+/* Glossary + sources */
+.gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:0 28px;margin:0}
+.gloss div{padding:12px 0;border-top:1px solid var(--rule)}
+.gloss dt{font:400 1.25rem/1.2 var(--display);color:var(--ink)}
+.gloss dt small{font:700 .72rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--violet);margin-left:6px}
+.gloss dd{margin:4px 0 0;color:var(--ink-2);font-size:.98rem}
+details.sources{margin-top:26px;border-top:2px solid var(--ink);padding-top:12px}
+details.sources summary{cursor:pointer;font-weight:700}
+details.sources pre{
+  font:400 .84rem/1.55 var(--mono);background:var(--box);border:1.5px solid var(--rule);
+  padding:12px 14px;overflow-x:auto;border-radius:2px;margin:10px 0 0;
+}
+footer.foot{margin-top:40px;font-size:.9rem;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between}
+footer.foot span{min-width:0;overflow-wrap:anywhere}
+footer.foot a{color:var(--ink-2)}
+.crumbs{font:700 .76rem/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.crumbs a{color:var(--violet);text-decoration:none}
+.crumbs a:hover{text-decoration:underline}
+.crumbs span{color:var(--ink-2)}
+.rack-head .mono,.pm-item span{min-width:0;overflow-wrap:anywhere}
+
+/* Load moment: the rack stamps in once. Visible at rest; animation only adds. */
+@keyframes stampin{from{transform:scale(.6);opacity:.35}to{transform:none;opacity:1}}
+.rack.stamping .box{animation:stampin .45s cubic-bezier(.2,.9,.3,1.2) both}
+@keyframes thud{0%{transform:rotate(-11deg) scale(1.25);opacity:.2}60%{transform:rotate(-11deg) scale(.97);opacity:1}100%{transform:rotate(-11deg) scale(1)}}
+.postmark{animation:thud .7s .15s cubic-bezier(.3,1.4,.5,1) both}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+
+/* Narrow screens */
+@media (max-width:860px){
+  .rack-zone,.desk-grid,.pm-grid,.path-grid{grid-template-columns:minmax(0,1fr)}
+  .chipswap{grid-template-columns:minmax(0,1fr)}
+  .chipswap .arrow{transform:rotate(90deg)}
+}
+@media (max-width:560px){
+  .wrap{padding-inline:16px}
+  .hero-top{grid-template-columns:minmax(0,1fr)}
+  .postmark{position:absolute;right:6px;top:6px;width:96px;opacity:.5}
+  .rack{grid-template-columns:repeat(12,minmax(0,1fr));gap:2px;padding:6px}
+  .readings{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .switches{gap:4px}
+  .sw .pv{font-size:.62rem}
+  .envelope{border-width:9px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/">triyambak.in</a> / <a href="/playground/">Playground</a> / <span>Byte Sorting Office</span></nav>
+
+<!-- ================= HERO ================= -->
+<section class="envelope hero" aria-labelledby="h-hero">
+  <div class="hero-top">
+    <div>
+      <div class="eyebrow">Files, folders and binaries, shown on my own Mac</div>
+      <h1 id="h-hero">Your disk is a <em>sorting office</em></h1>
+      <p class="lede">Inside a Mac's drive there are no files and no folders. Mine holds about <strong>243 million numbered boxes</strong>, each holding exactly 4,096 bytes (4 KB). Names, folders and programs are all bookkeeping, kept by a clerk called the <strong>file system</strong>. The clerk's one job is to remember which boxes belong to which name.</p>
+      <p class="lede quiet">A <strong>binary</strong> is one kind of parcel in those boxes: a program written in the chip's own language instead of in words for you. The seven counters below build up to it, one idea each.</p>
+    </div>
+    <svg class="postmark" viewBox="0 0 300 200" aria-hidden="true">
+      <defs><path id="ring" d="M100,100 m-72,0 a72,72 0 1,1 144,0 a72,72 0 1,1 -144,0"/></defs>
+      <g fill="none" style="stroke:var(--violet)">
+        <circle cx="100" cy="100" r="93" stroke-width="4"/>
+        <circle cx="100" cy="100" r="57" stroke-width="2.5"/>
+        <path d="M196,64 q15,-11 30,0 t30,0 t30,0" stroke-width="3.5"/>
+        <path d="M198,88 q15,-11 30,0 t30,0 t30,0" stroke-width="3.5"/>
+        <path d="M198,112 q15,-11 30,0 t30,0 t30,0" stroke-width="3.5"/>
+        <path d="M196,136 q15,-11 30,0 t30,0 t30,0" stroke-width="3.5"/>
+      </g>
+      <text font-size="14" letter-spacing="2.6"><textPath href="#ring">BYTE SORTING OFFICE · MACINTOSH HD · </textPath></text>
+      <text x="100" y="97" text-anchor="middle" class="deva" font-size="32">डाक</text>
+      <text x="100" y="118" text-anchor="middle" font-size="13">26 SEP 2026</text>
+      <text x="100" y="135" text-anchor="middle" font-size="10" letter-spacing="1">APFS · 4 KB</text>
+    </svg>
+  </div>
+
+  <div class="rack-zone">
+    <div>
+      <div class="rack-head">
+        <h3>The rack: 192 of my 243 million boxes</h3>
+        <span class="tiny mono">1 box = 4,096 bytes</span>
+      </div>
+      <p class="quiet" style="margin-bottom:10px">Pick a real file from my dotfiles folder (the settings folder that sets up my Mac). Its boxes light up red.</p>
+      <ul class="chips" id="rackChips" aria-label="Files on the rack"></ul>
+      <div class="rack stamping" id="rack" role="img" aria-label="A grid of 192 disk boxes showing which ones hold the chosen file"></div>
+      <div class="overflow" id="rackOverflow" hidden></div>
+      <p class="tiny rack-note">Box counts are real: the file's size divided by 4,096, rounded up. Where the boxes sit on the rack is drawn for illustration.</p>
+    </div>
+    <aside class="card" id="rackCard" aria-live="polite"></aside>
+  </div>
+</section>
+
+<!-- ================= COUNTER 1 ================= -->
+<section class="counter" id="register" aria-labelledby="h-c1">
+  <div class="counter-head">
+    <span class="plate">Counter <b>1</b></span>
+    <h2 id="h-c1">A folder is a register. A path is an address.</h2>
+  </div>
+  <div class="measure">
+    <p>A folder does not hold files inside it. It is a <strong>register</strong>: a list of names, and beside each name the number of that file's <strong>index card</strong>. The card holds the facts: size, owner, permissions and which boxes hold the contents. Computers call the card an <strong>inode</strong> (say "eye-node", short for index node).</p>
+    <p>A <strong>path</strong> such as <code>/Users/triyambak/.dotfiles/rebuild.sh</code> is a postal address, read left to right. The clerk opens the top register, finds the next name, follows its card number to the next register, and repeats until the address runs out. Walk it yourself. The card numbers are the real ones from my Mac.</p>
+  </div>
+  <div class="desk">
+    <div class="address" id="addr" aria-label="The path being walked"></div>
+    <div class="btnrow">
+      <button class="btn" id="walkBack" type="button">Back one step</button>
+      <button class="btn primary" id="walkNext" type="button">Next step</button>
+    </div>
+    <div class="desk-grid">
+      <div class="register" id="walkReg"></div>
+      <div>
+        <div class="say" id="walkSay" aria-live="polite"></div>
+        <div class="card" id="walkCard" style="margin-top:14px" hidden></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COUNTER 2 ================= -->
+<section class="counter" id="clerk" aria-labelledby="h-c2">
+  <div class="counter-head">
+    <span class="plate">Counter <b>2</b></span>
+    <h2 id="h-c2">What the clerk does when you move, copy or delete</h2>
+  </div>
+  <div class="measure">
+    <p>Every everyday action is a change to the register, to the boxes, or to both. That one fact explains why some actions are instant and others take minutes. Press an action to see what really changes. The three files are examples.</p>
+  </div>
+  <div class="desk">
+    <div class="btnrow" role="group" aria-label="Clerk actions">
+      <button class="btn" type="button" data-act="rename" aria-pressed="false">Rename or move</button>
+      <button class="btn" type="button" data-act="copy" aria-pressed="false">Duplicate</button>
+      <button class="btn" type="button" data-act="trash" aria-pressed="false">Move to Trash</button>
+      <button class="btn" type="button" data-act="delete" aria-pressed="false">Empty the Trash</button>
+      <button class="btn" type="button" data-act="link" aria-pressed="false">Make a shortcut</button>
+      <button class="btn" type="button" data-act="reset" aria-pressed="false">Start again</button>
+    </div>
+    <div class="desk-grid">
+      <div>
+        <div class="register" id="clerkReg"></div>
+        <div class="mini" id="clerkRack" role="img" aria-label="Sixteen disk boxes"></div>
+        <div class="mini-legend">
+          <span><i style="background:var(--air)"></i>budget.xlsx</span>
+          <span><i style="background:var(--violet)"></i>photo.jpg</span>
+          <span><i style="background:var(--red)"></i>notes.txt</span>
+          <span><i style="background:var(--box-free),var(--box);border:1px dashed var(--ink-3)"></i>free, old bytes still there</span>
+        </div>
+        <div class="slip" id="clerkSlip" hidden></div>
+      </div>
+      <div class="say" id="clerkSay" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COUNTER 3 ================= -->
+<section class="counter" id="bytes" aria-labelledby="h-c3">
+  <div class="counter-head">
+    <span class="plate">Counter <b>3</b></span>
+    <h2 id="h-c3">Open any box and you find bytes</h2>
+  </div>
+  <div class="measure">
+    <p>A <strong>byte</strong> is a row of eight switches, each on or off. Eight switches give 256 possible patterns. On its own a byte means nothing. It becomes a number, a letter or a colour only when a program decides how to read it.</p>
+    <p>Programmers write a byte as two symbols from 0 to 9 and A to F. This shorthand is called <strong>hex</strong>, and it is how the rest of this page shows bytes. Flip the switches.</p>
+  </div>
+  <div class="desk">
+    <div class="switches" id="switches" role="group" aria-label="Eight switches of one byte"></div>
+    <div class="readings">
+      <div class="reading"><div class="k">As a number</div><div class="v" id="rNum"></div><div class="d">Add up the switches that are on.</div></div>
+      <div class="reading"><div class="k">As hex</div><div class="v mono" id="rHex"></div><div class="d">The same number in two symbols.</div></div>
+      <div class="reading"><div class="k">As a letter</div><div class="v" id="rChr"></div><div class="d" id="rChrD"></div></div>
+      <div class="reading"><div class="k">As a shade</div><div class="swatch" id="rShade"></div><div class="d">0 is black, 255 is white.</div></div>
+    </div>
+    <div class="presets" role="group" aria-label="Example bytes">
+      <button class="btn" type="button" data-byte="35">First byte of rebuild.sh</button>
+      <button class="btn" type="button" data-byte="207">First byte of git</button>
+      <button class="btn" type="button" data-byte="65">The letter A</button>
+      <button class="btn" type="button" data-byte="10">A line break</button>
+      <button class="btn" type="button" data-byte="255">All on</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COUNTER 4 ================= -->
+<section class="counter" id="twofiles" aria-labelledby="h-c4">
+  <div class="counter-head">
+    <span class="plate">Counter <b>4</b></span>
+    <h2 id="h-c4">Same kind of bytes, two kinds of file</h2>
+  </div>
+  <div class="measure">
+    <p>These are the first 32 bytes of two real files on my Mac, exactly as they sit in their boxes. Under each byte is the letter it stands for, if it stands for one. The dots are bytes with no letter.</p>
+    <p>One file turns into words you can read. The other turns into dots, because it was never meant for you. That is the whole difference between a <strong>text file</strong> and a <strong>binary file</strong>: in a binary, the bytes are not letters.</p>
+  </div>
+  <div class="desk">
+    <label class="toggle"><input type="checkbox" id="showLetters" checked> Show the letters under the bytes</label>
+    <div class="strip">
+      <div class="strip-head"><b>~/.dotfiles/rebuild.sh</b><span class="tiny">text file · 2,332 bytes · a script</span></div>
+      <div class="bytes-scroll"><div class="bytes" id="stripScript"></div></div>
+    </div>
+    <div class="strip">
+      <div class="strip-head"><b>git</b><span class="tiny">binary file · 4,102,416 bytes · a program</span></div>
+      <div class="bytes-scroll"><div class="bytes" id="stripGit"></div></div>
+    </div>
+    <p class="tiny" style="margin-top:12px">Read across the top row: <span class="mono">#!/usr/bin/env bash</span>, then a line break (<span class="mono">0A</span>), then <span class="mono">set -euo pip</span>. The git row reads as nothing at all.</p>
+  </div>
+</section>
+
+<!-- ================= COUNTER 5 ================= -->
+<section class="counter" id="postmark" aria-labelledby="h-c5">
+  <div class="counter-head">
+    <span class="plate">Counter <b>5</b></span>
+    <h2 id="h-c5">The first bytes are the postmark</h2>
+  </div>
+  <div class="measure">
+    <p>Most file types begin with a fixed signature, like a postmark on an envelope. Programmers call it the <strong>magic number</strong>. The ending of a file's name, such as <code>.xlsx</code>, is only a label anyone can retype. The postmark is inside the file, and it tells a program what it is really holding.</p>
+  </div>
+  <div class="desk pm-grid">
+    <ul class="pm-list" id="pmList" aria-label="File types"></ul>
+    <div class="cancel" id="pmCard" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ================= COUNTER 6 ================= -->
+<section class="counter" id="binary" aria-labelledby="h-c6">
+  <div class="counter-head">
+    <span class="plate">Counter <b>6</b></span>
+    <h2 id="h-c6">So what is a binary?</h2>
+  </div>
+  <div class="measure">
+    <p>A <strong>binary</strong> is a program file whose boxes hold instructions in the chip's own language. People write programs in words, called <strong>source code</strong>. A translator program called a <strong>compiler</strong> turns those words into the chip's instructions, once, ahead of time. The result runs straight on the chip, which is why it is fast and why you cannot read it.</p>
+    <p>Each kind of chip speaks its own language. My Mac has an Apple chip (the family is called <strong>arm64</strong>); older Macs had Intel chips (<strong>x86_64</strong>). Switch the chip and watch the same instruction change.</p>
+  </div>
+  <div class="desk">
+    <div class="btnrow" role="group" aria-label="Choose a chip">
+      <button class="btn" type="button" data-chip="arm" aria-pressed="true">Apple chip (arm64)</button>
+      <button class="btn" type="button" data-chip="x86" aria-pressed="false">Intel chip (x86_64)</button>
+    </div>
+    <div class="chipswap">
+      <div class="step-box"><div class="k">A person writes</div><div class="v">count = count + 1</div></div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="step-box"><div class="k">Compiler picks the chip's word</div><div class="v" id="chipAsm"></div></div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="step-box out"><div class="k">Bytes stored in the binary</div><div class="v" id="chipBytes"></div></div>
+    </div>
+    <p class="say" id="chipSay" style="margin-top:14px;min-height:0"></p>
+    <div class="tbl-scroll">
+      <table class="cmp">
+        <thead><tr><th scope="col"></th><th scope="col">Script (a text program)</th><th scope="col">Binary (a compiled program)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">On my Mac</th><td><code>rebuild.sh</code>, <code>jev</code></td><td><code>git</code>, <code>ls</code></td></tr>
+          <tr><th scope="row">What is inside</th><td>Words a person typed</td><td>Instructions in the chip's language</td></tr>
+          <tr><th scope="row">Postmark</th><td><code>23 21</code>, which spells <code>#!</code></td><td><code>CF FA ED FE</code> or <code>CA FE BA BE</code></td></tr>
+          <tr><th scope="row">Who reads it</th><td>Another program (here, <strong>bash</strong>) reads it line by line, every time it runs</td><td>The chip runs it directly</td></tr>
+          <tr><th scope="row">Open it in a text editor</th><td>Readable</td><td>Rows of junk symbols</td></tr>
+          <tr><th scope="row">Runs on any chip?</th><td>Yes, the reader program handles the chip</td><td>Only the chip it was built for, unless it carries both editions</td></tr>
+          <tr><th scope="row">How it is made</th><td>Typed and saved</td><td>Source code translated once by a compiler</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="measure" style="margin-top:18px">Folders named <code>bin</code>, such as <code>/bin</code>, <code>/usr/bin</code> and <code>/opt/homebrew/bin</code>, are where these programs live. <code>bin</code> is short for binaries. Scripts live there too, so people say "binaries" loosely for any command you can run by name. What every one of them needs is the <strong>x</strong> (execute) permission from Counter 1.</p>
+  </div>
+</section>
+
+<!-- ================= COUNTER 7 ================= -->
+<section class="counter" id="path" aria-labelledby="h-c7">
+  <div class="counter-head">
+    <span class="plate">Counter <b>7</b></span>
+    <h2 id="h-c7">You type git. Which copy runs?</h2>
+  </div>
+  <div class="measure">
+    <p>When you type a command, the <strong>shell</strong> (the program that reads what you type in the terminal) does not search the whole disk. It checks a short list of folders, in a fixed order. That list is called the <strong>PATH</strong>. The first folder holding a runnable file with that name wins, and the search stops there.</p>
+    <p>Below is my Mac's real list. Pick a command and watch the clerk walk it.</p>
+  </div>
+  <div class="desk path-grid">
+    <div>
+      <div class="prompt">
+        <span class="ps">triyambak %</span>
+        <label for="cmdPick" class="tiny" style="position:absolute;left:-9999px">Command to look up</label>
+        <select id="cmdPick">
+          <option value="git">git</option>
+          <option value="zsh">zsh</option>
+          <option value="python3">python3</option>
+          <option value="ls">ls</option>
+          <option value="jev">jev</option>
+          <option value="herdr">herdr</option>
+          <option value="nvim">nvim</option>
+          <option value="tally">tally</option>
+        </select>
+        <button class="btn primary" id="cmdRun" type="button">Search again</button>
+      </div>
+      <ol class="pathlist" id="pathList"></ol>
+      <p class="tiny" style="margin-top:8px">The list as this Mac reported it on 26 Sep 2026, minus five folders Claude Code adds for its own plugins.</p>
+    </div>
+    <div>
+      <div class="result" id="cmdResult" aria-live="polite"></div>
+      <p class="say" id="cmdSay" style="margin-top:14px"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GLOSSARY ================= -->
+<section class="counter" id="words" aria-labelledby="h-gl">
+  <div class="counter-head">
+    <h2 id="h-gl">The words, once more</h2>
+  </div>
+  <dl class="gloss">
+    <div><dt>Byte</dt><dd>Eight on/off switches. One of 256 patterns.</dd></div>
+    <div><dt>Hex</dt><dd>A byte written as two symbols, from 00 to FF.</dd></div>
+    <div><dt>Block <small>box</small></dt><dd>A fixed-size slot on the disk. 4,096 bytes on a Mac.</dd></div>
+    <div><dt>File system</dt><dd>The bookkeeping that maps names to boxes. A Mac's is APFS, the Apple File System.</dd></div>
+    <div><dt>Folder <small>directory</small></dt><dd>A register of names, each pointing to an index card.</dd></div>
+    <div><dt>Inode <small>index card</small></dt><dd>One per file: its size, owner, permissions and list of boxes.</dd></div>
+    <div><dt>Path</dt><dd>A file's address: folder names joined by <code>/</code>, read left to right.</dd></div>
+    <div><dt>Permissions</dt><dd>The r (read), w (write) and x (execute) stamps, for owner, group and everyone.</dd></div>
+    <div><dt>Symlink <small>shortcut</small></dt><dd>A tiny file whose only content is another address.</dd></div>
+    <div><dt>Binary</dt><dd>A file whose bytes are not text. Usually means a program in the chip's own language.</dd></div>
+    <div><dt>Script</dt><dd>A program kept as readable text, read line by line by another program such as bash.</dd></div>
+    <div><dt>Compiler</dt><dd>The translator that turns source code into a binary for one kind of chip.</dd></div>
+    <div><dt>Magic number <small>postmark</small></dt><dd>The fixed first bytes that tell a program what kind of file it holds.</dd></div>
+    <div><dt>Shell</dt><dd>The program that reads what you type in the terminal. On a Mac it is zsh.</dd></div>
+    <div><dt>PATH</dt><dd>The ordered list of folders the shell searches for a command. First match wins.</dd></div>
+  </dl>
+
+  <details class="sources">
+    <summary>Where these numbers came from</summary>
+    <p class="tiny" style="margin-top:8px">Every figure on this page came from these commands, run on my Mac on 26 Sep 2026.</p>
+<pre>diskutil info /                  # APFS, 4,096-byte blocks, 994,662,584,320 bytes
+ls -id / /Users ~ ~/.dotfiles ~/.dotfiles/rebuild.sh   # card numbers 2 ... 209681816
+ls -li ~/.dotfiles               # sizes, owners and permissions for the rack
+xxd -l 32 ~/.dotfiles/rebuild.sh # 23 21 2f 75 ...
+xxd -l 32 "$(realpath "$(which git)")"   # cf fa ed fe ...
+xxd -l 16 /bin/ls                # ca fe ba be ...
+file /bin/ls; lipo -archs /bin/ls        # universal: x86_64 + arm64e
+which -a git zsh python3 ls jev herdr nvim
+echo $PATH | tr ':' '\n'
+readlink ~/.zshrc; realpath ~/.zshrc     # the two-hop shortcut</pre>
+  </details>
+
+  <footer class="foot">
+    <span>Byte Sorting Office · built 26 Sep 2026</span>
+    <span><a href="/playground/">More experiments in the Playground</a> · <a href="/">triyambak.in</a></span>
+  </footer>
+</section>
+
+</div>
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+  var fmt = function(n){ return Number(n).toLocaleString("en-US"); };
+  var reduced = false;
+  try { reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch(e) {}
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+  function safe(name, fn){ try { fn(); } catch(err){ if (window.console) console.error("[sorting-office] " + name, err); } }
+
+  /* ---------- Index card builder (used by the rack and the path walk) ---------- */
+  function cardHTML(f){
+    return '<h4>Index card no. ' + f.card + '</h4>' +
+      '<div class="sub">Listed in the <b>' + esc(f.folder) + '</b> register as <b>' + esc(f.name) + '</b>. One card per file; the system calls it an inode.</div>' +
+      '<dl>' +
+        '<dt>Size</dt><dd>' + fmt(f.size) + ' bytes</dd>' +
+        '<dt>Boxes</dt><dd>' + fmt(Math.ceil(f.size / 4096)) + '</dd>' +
+        '<dt>Owner</dt><dd>' + esc(f.owner) + '</dd>' +
+        '<dt>Stamps</dt><dd>' + esc(f.perms) + '</dd>' +
+      '</dl>';
+  }
+
+  /* ---------- HERO: the rack ---------- */
+  var RACK_FILES = [
+    {name:"rebuild.sh",        folder:"~/.dotfiles", size:2332,  card:209681816, owner:"triyambak", perms:"-rwxr-xr-x"},
+    {name:"AGENTS.md",         folder:"~/.dotfiles", size:6715,  card:216457005, owner:"triyambak", perms:"-rw-r--r--"},
+    {name:"VISION.md",         folder:"~/.dotfiles", size:6807,  card:210400205, owner:"triyambak", perms:"-rw-r--r--"},
+    {name:"flake.lock",        folder:"~/.dotfiles", size:9669,  card:195241870, owner:"triyambak", perms:"-rw-r--r--"},
+    {name:"TODO.md",           folder:"~/.dotfiles", size:14395, card:216852767, owner:"triyambak", perms:"-rw-r--r--"},
+    {name:"README.md",         folder:"~/.dotfiles", size:16429, card:216467947, owner:"triyambak", perms:"-rw-r--r--"},
+    {name:"configuration.nix", folder:"~/.dotfiles", size:24517, card:210860938, owner:"triyambak", perms:"-rw-r--r--"},
+    {name:"home.nix",          folder:"~/.dotfiles", size:35353, card:217156377, owner:"triyambak", perms:"-rw-r--r--"},
+    {name:"DECISIONS.md",      folder:"~/.dotfiles", size:42771, card:217228950, owner:"triyambak", perms:"-rw-r--r--"},
+    {name:"git",               folder:"/nix/store/pg6qjz9x…-git-2.54.0/bin", size:4102416, card:973656, owner:"root", perms:"-r-xr-xr-x", big:true}
+  ];
+  var RACK_N = 192;
+
+  safe("rack", function(){
+    var rack = $("rack"), chips = $("rackChips"), card = $("rackCard"), over = $("rackOverflow");
+    if (!rack || !chips || !card || !over) return;
+
+    // Seeded shuffle so the layout is the same on every load.
+    var seed = 20260926;
+    function rnd(){ seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
+    var owner = new Array(RACK_N).fill(-1);
+    RACK_FILES.forEach(function(f, fi){
+      if (f.big) return;
+      var need = Math.ceil(f.size / 4096);
+      var runs = need > 4 ? 2 : 1;           // bigger files get split, as real disks do
+      var sizes = runs === 2 ? [Math.ceil(need / 2), Math.floor(need / 2)] : [need];
+      sizes.forEach(function(len){
+        for (var tries = 0; tries < 400; tries++){
+          var start = Math.floor(rnd() * (RACK_N - len));
+          var ok = true;
+          for (var k = 0; k < len; k++) if (owner[start + k] !== -1) { ok = false; break; }
+          if (ok){ for (var j = 0; j < len; j++) owner[start + j] = fi; return; }
+        }
+        for (var s = 0, left = len; s < RACK_N && left > 0; s++) if (owner[s] === -1){ owner[s] = fi; left--; }
+      });
+    });
+
+    var boxes = [];
+    for (var i = 0; i < RACK_N; i++){
+      var b = document.createElement("div");
+      b.className = "box" + (owner[i] !== -1 ? " used" : "");
+      b.style.animationDelay = ((i % 16) * 14 + Math.floor(i / 16) * 22) + "ms";
+      rack.appendChild(b); boxes.push(b);
+    }
+    setTimeout(function(){ rack.classList.remove("stamping"); }, reduced ? 0 : 1400);
+
+    RACK_FILES.forEach(function(f, fi){
+      var li = document.createElement("li");
+      var btn = document.createElement("button");
+      btn.type = "button"; btn.className = "chip"; btn.setAttribute("aria-pressed", "false");
+      btn.innerHTML = esc(f.name) + '<span class="n">' + fmt(Math.ceil(f.size / 4096)) + '</span>';
+      btn.addEventListener("click", function(){ pick(fi); });
+      li.appendChild(btn); chips.appendChild(li);
+    });
+
+    function pick(fi){
+      var f = RACK_FILES[fi];
+      Array.prototype.forEach.call(chips.querySelectorAll(".chip"), function(c, ci){ c.setAttribute("aria-pressed", ci === fi ? "true" : "false"); });
+      boxes.forEach(function(b, bi){ b.classList.toggle("hit", f.big ? true : owner[bi] === fi); });
+      card.innerHTML = cardHTML(f);
+      if (f.big){
+        var need = Math.ceil(f.size / 4096);
+        over.innerHTML = '<strong>git needs ' + fmt(need) + ' boxes.</strong> This rack holds ' + RACK_N + ', so git alone would fill it more than ' + Math.floor(need / RACK_N) + ' times over. It is still one file with one card: the card simply lists ' + fmt(need) + ' boxes.';
+        over.hidden = false;
+      } else {
+        over.hidden = true;
+      }
+    }
+    pick(0);
+  });
+
+  /* ---------- COUNTER 1: walk a path ---------- */
+  var WALK = [
+    {title:"Register of /, card 2", note:"a selection", lines:["Applications","bin","Library","nix","opt","System","Users","usr","Volumes"], match:"Users", card:18340,
+     say:"Start at the top folder, written as a single <code>/</code>. Its card is number 2 on every Mac. The clerk reads down the register for <strong>Users</strong> and finds card <strong>18340</strong>."},
+    {title:"Register of Users, card 18340", note:"a selection", lines:["Shared","triyambak"], match:"triyambak", card:66045,
+     say:"Open card 18340: the Users register. It has two names. <strong>triyambak</strong> points to card <strong>66045</strong>."},
+    {title:"Register of triyambak, card 66045", note:"a selection", lines:[".dotfiles","Applications","Documents","Downloads","Library","Movies","Music","Pictures","Public"], match:".dotfiles", card:175436751,
+     say:"My home folder. <strong>.dotfiles</strong> is card <strong>175436751</strong>. Finder hides any name that starts with a dot, which is why you never see this folder there. The register still lists it; hiding is only Finder's choice."},
+    {title:"Register of .dotfiles, card 175436751", note:"a selection", lines:["AGENTS.md","DECISIONS.md","README.md","audit.sh","backup.sh","configuration.nix","flake.lock","flake.nix","home.nix","rebuild.sh","TODO.md","VISION.md"], match:"rebuild.sh", card:209681816,
+     say:"The last register. <strong>rebuild.sh</strong> is card <strong>209681816</strong>. The address has run out, so the next step opens the card itself."},
+    {final:true,
+     say:"Arrived. The card says the contents fill 1 box, and who may do what. <code>-rwxr-xr-x</code> is three sets of stamps after the first dash: for the owner (me), for my group, and for everyone else. <strong>r</strong> lets them read it, <strong>w</strong> lets them change it, <strong>x</strong> lets them run it as a program. Only I may change it; anyone may read and run it."}
+  ];
+  var SEGS = ["Users","triyambak",".dotfiles","rebuild.sh"];
+
+  safe("walk", function(){
+    var addr = $("addr"), reg = $("walkReg"), say = $("walkSay"), card = $("walkCard"), back = $("walkBack"), next = $("walkNext");
+    if (!addr || !reg || !say || !card || !back || !next) return;
+    var step = 0;
+    function render(){
+      var s = WALK[step];
+      var h = '<span class="done">/</span>';
+      SEGS.forEach(function(seg, i){
+        var cls;
+        if (s.final) cls = (i === SEGS.length - 1) ? "now" : "done";
+        else cls = (i < step) ? "done" : (i === step) ? "now" : "";
+        h += '<span class="' + cls + '">' + esc(seg) + '</span>' + (i < SEGS.length - 1 ? '<span class="sep">/</span>' : '');
+      });
+      addr.innerHTML = h;
+      var r = s.final ? WALK[3] : s;
+      reg.innerHTML = '<div class="reg-title"><span>' + esc(r.title) + '</span><span>' + esc(r.note) + '</span></div><ol>' +
+        r.lines.map(function(nm){
+          var m = nm === r.match;
+          return '<li class="' + (m ? "match" : "") + '"><span class="nm">' + esc(nm) + '</span><span class="num">' + (m ? "card " + r.card : "") + '</span></li>';
+        }).join("") + '</ol>';
+      say.innerHTML = s.say;
+      if (s.final){ card.innerHTML = cardHTML(RACK_FILES[0]); card.hidden = false; } else { card.hidden = true; }
+      back.disabled = step === 0;
+      next.disabled = step === WALK.length - 1;
+      next.textContent = step === WALK.length - 2 ? "Open the card" : "Next step";
+    }
+    back.addEventListener("click", function(){ if (step > 0){ step--; render(); } });
+    next.addEventListener("click", function(){ if (step < WALK.length - 1){ step++; render(); } });
+    render();
+  });
+
+  /* ---------- COUNTER 2: the clerk ---------- */
+  safe("clerk", function(){
+    var reg = $("clerkReg"), rack = $("clerkRack"), say = $("clerkSay"), slip = $("clerkSlip");
+    if (!reg || !rack || !say || !slip) return;
+    var BASE_BOXES = {a:[0,1,2,3], b:[5,6,7,8,9,10], c:[12]};
+    var LETTER = {a:"B", b:"P", c:"N"};
+    var SAY = {
+      rest:"This is an example folder holding three files. <strong>budget.xlsx</strong> fills 4 boxes, <strong>photo.jpg</strong> fills 6 and <strong>notes.txt</strong> fills 1. Pick an action to see what changes.",
+      rename:"<strong>Rename or move.</strong> Only one line in the register changes. The card number and the boxes stay exactly where they were. That is why moving a 10 GB film into another folder on the same disk is instant. Moving it to a <em>different</em> disk is really a copy followed by a delete, which is why that takes time.",
+      copy:"<strong>Duplicate.</strong> A new line and a new card. On a Mac, Finder's Duplicate makes a <strong>clone</strong>: the new card points at the same four boxes (outlined in black), so it is instant and uses no extra space. Fresh boxes are used only for the parts you later change in one of the two. Copying to a USB stick always writes fresh boxes.",
+      trash:"<strong>Move to Trash.</strong> This is only a move. The line leaves this register and is written into the Trash's register instead. Every box is still in use, which is why moving files to the Trash frees no space until you empty it.",
+      "delete":"<strong>Empty the Trash.</strong> The line is crossed out and its six boxes are marked free. Nothing is wiped at that moment: the old bytes sit there until something new is written over them. On an old hard disk or a USB stick, recovery tools can often get them back. On a modern Mac's built-in drive, which is encrypted and clears freed boxes on its own, they rarely can.",
+      link:"<strong>Make a shortcut.</strong> A shortcut, called a <strong>symlink</strong>, gets its own card, but its only content is another address: \"go and look at budget.xlsx\". It uses no boxes for the real contents. Delete budget.xlsx and the shortcut points at nothing. My dotfiles are built from these. The slip below is a real one from my Mac: <code>~/.zshrc</code> forwards twice before reaching the real file."
+    };
+    function base(){
+      return {
+        lines:[{nm:"budget.xlsx", num:"card 5120"},{nm:"photo.jpg", num:"card 5121"},{nm:"notes.txt", num:"card 5122"}],
+        freed:[], shared:[], slip:false
+      };
+    }
+    function render(state, act){
+      reg.innerHTML = '<div class="reg-title"><span>Register of ~/Documents/Example</span><span>example</span></div><ol>' +
+        state.lines.map(function(l){
+          return '<li class="' + (l.cls || "") + '"><span class="nm">' + esc(l.nm) + '</span><span class="num">' + esc(l.num) + '</span></li>';
+        }).join("") + '</ol>';
+      var h = "";
+      for (var i = 0; i < 16; i++){
+        var cls = "box", txt = "";
+        ["a","b","c"].forEach(function(k){ if (BASE_BOXES[k].indexOf(i) !== -1){ cls += " " + k; txt = LETTER[k]; } });
+        if (state.freed.indexOf(i) !== -1) cls = "box freed";
+        if (state.shared.indexOf(i) !== -1) cls += " shared";
+        h += '<div class="' + cls + '">' + txt + '</div>';
+      }
+      rack.innerHTML = h;
+      slip.hidden = !state.slip;
+      slip.innerHTML = state.slip ? "~/.zshrc<br>⟶ /nix/store/9vmwbs7l…-home-manager-files/.zshrc<br>⟶ /nix/store/lrqs80is…-hm_..zshrc &nbsp;(5,466 bytes, the real file)" : "";
+      say.innerHTML = SAY[act] || SAY.rest;
+      Array.prototype.forEach.call(document.querySelectorAll("#clerk [data-act]"), function(b){
+        b.setAttribute("aria-pressed", b.getAttribute("data-act") === act ? "true" : "false");
+      });
+    }
+    var ACTS = {
+      rename:function(s){ s.lines[2] = {nm:"notes-FY25.txt", num:"card 5122", cls:"fresh"}; },
+      copy:function(s){ s.lines.splice(1, 0, {nm:"budget copy.xlsx", num:"card 5123", cls:"fresh"}); s.shared = BASE_BOXES.a.slice(); },
+      trash:function(s){ s.lines[1] = {nm:"photo.jpg", num:"moved to Trash", cls:"struck"}; },
+      "delete":function(s){ s.lines[1] = {nm:"photo.jpg", num:"deleted", cls:"struck"}; s.freed = BASE_BOXES.b.slice(); },
+      link:function(s){ s.lines.push({nm:"latest.xlsx", num:"shortcut, card 5124", cls:"fresh"}); s.slip = true; }
+    };
+    Array.prototype.forEach.call(document.querySelectorAll("#clerk [data-act]"), function(btn){
+      btn.addEventListener("click", function(){
+        var act = btn.getAttribute("data-act");
+        var s = base();
+        if (ACTS[act]) ACTS[act](s);
+        render(s, act === "reset" ? "rest" : act);
+      });
+    });
+    render(base(), "rest");
+  });
+
+  /* ---------- COUNTER 3: switchboard ---------- */
+  safe("byte", function(){
+    var wrap = $("switches"), rNum = $("rNum"), rHex = $("rHex"), rChr = $("rChr"), rChrD = $("rChrD"), rShade = $("rShade");
+    if (!wrap || !rNum || !rHex || !rChr || !rChrD || !rShade) return;
+    var val = 35;
+    var PV = [128,64,32,16,8,4,2,1];
+    var sws = PV.map(function(pv){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "sw";
+      b.setAttribute("aria-label", "Switch worth " + pv);
+      b.innerHTML = '<span class="lamp"></span><span class="bit">0</span><span class="pv">' + pv + '</span>';
+      b.addEventListener("click", function(){ val ^= pv; render(); });
+      wrap.appendChild(b);
+      return b;
+    });
+    function letter(n){
+      if (n === 32) return ["space", "The gap between words."];
+      if (n === 10) return ["↵", "A line break: the end of a line in a text file."];
+      if (n === 9) return ["tab", "The tab key's code."];
+      if (n === 13) return ["↵", "A carriage return, an old kind of line ending."];
+      if (n < 32 || n === 127) return ["·", "An invisible control code, not a letter."];
+      if (n > 127) return ["·", "No letter. Plain text (ASCII) stops at 127."];
+      return [String.fromCharCode(n), "Plain text (ASCII) maps " + n + " to this."];
+    }
+    function render(){
+      sws.forEach(function(b, i){
+        var on = (val & PV[i]) !== 0;
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        b.querySelector(".bit").textContent = on ? "1" : "0";
+      });
+      rNum.textContent = val;
+      rHex.textContent = val.toString(16).toUpperCase().padStart(2, "0");
+      var L = letter(val);
+      rChr.textContent = L[0]; rChrD.textContent = L[1];
+      rShade.style.background = "rgb(" + val + "," + val + "," + val + ")";
+    }
+    Array.prototype.forEach.call(document.querySelectorAll("#bytes [data-byte]"), function(b){
+      b.addEventListener("click", function(){ val = parseInt(b.getAttribute("data-byte"), 10) || 0; render(); });
+    });
+    render();
+  });
+
+  /* ---------- COUNTER 4: two real files, byte by byte ---------- */
+  var HEX_SCRIPT = "23 21 2f 75 73 72 2f 62 69 6e 2f 65 6e 76 20 62 61 73 68 0a 73 65 74 20 2d 65 75 6f 20 70 69 70";
+  var HEX_GIT    = "cf fa ed fe 0c 00 00 01 00 00 00 00 02 00 00 00 18 00 00 00 b8 08 00 00 85 00 20 00 00 00 00 00";
+  safe("strips", function(){
+    function fill(el, hex){
+      if (!el) return;
+      el.innerHTML = hex.split(" ").map(function(h){
+        var n = parseInt(h, 16), ch, dot = false;
+        if (n === 10) ch = "↵";
+        else if (n === 32) ch = "␣";
+        else if (n > 32 && n < 127) ch = esc(String.fromCharCode(n));
+        else { ch = "·"; dot = true; }
+        return '<div class="byte"><span class="h">' + h.toUpperCase() + '</span><span class="c' + (dot ? " dot" : "") + '">' + ch + '</span></div>';
+      }).join("");
+    }
+    fill($("stripScript"), HEX_SCRIPT);
+    fill($("stripGit"), HEX_GIT);
+    var t = $("showLetters");
+    if (t) t.addEventListener("change", function(){
+      Array.prototype.forEach.call(document.querySelectorAll("#twofiles .bytes"), function(b){ b.classList.toggle("hide-letters", !t.checked); });
+    });
+  });
+
+  /* ---------- COUNTER 5: postmarks ---------- */
+  var PM = [
+    {name:"Excel workbook (.xlsx)", bytes:"50 4B 03 04", spell:"P K · ·", title:"A ZIP bundle in disguise",
+     means:"PK marks a ZIP file, after Phil Katz, who created the format. An .xlsx workbook is a zipped folder of small text files: one per sheet, plus styles and shared text. Word's .docx and PowerPoint's .pptx are built the same way.",
+     where:"Try it: copy any .xlsx, rename the copy to end in .zip, and double-click it. Inside the xl folder is a worksheets folder with one file per sheet."},
+    {name:"PDF document", bytes:"25 50 44 46 2D", spell:"% P D F -", title:"A PDF announces itself",
+     means:"Every PDF opens by writing its own name in plain letters, followed by its version, such as %PDF-1.7. After that it mixes readable parts with compressed binary parts.",
+     where:"Seen on: every acknowledgement and challan you download."},
+    {name:"PNG image", bytes:"89 50 4E 47 0D 0A 1A 0A", spell:"· P N G · · · ·", title:"A postmark with trip wires",
+     means:"The letters PNG sit between deliberate traps. The first byte is above 127, and the last four are line-break and end-of-file codes. If a program mangles the file as if it were text, the damage shows up here at once.",
+     where:"Seen on: screenshots you take on this Mac."},
+    {name:"JPEG photo", bytes:"FF D8 FF", spell:"· · ·", title:"No letters at all",
+     means:"A photo is pure binary. Its bytes describe colours and compression, not words, and even its postmark has no letters in it.",
+     where:"Seen on: most photos shared on WhatsApp."},
+    {name:"Script (rebuild.sh)", bytes:"23 21", spell:"# !", title:"The shebang line",
+     means:"Said \"shebang\". It marks a text script, and the rest of the first line names the program that should read it. For rebuild.sh that line is #!/usr/bin/env bash, meaning \"hand me to bash\". Bash is a program that reads a script and carries out its lines one by one.",
+     where:"On my Mac: ~/.dotfiles/rebuild.sh, and jev in ~/.local/bin."},
+    {name:"Mac program, one chip (git)", bytes:"CF FA ED FE", spell:"· · · ·", title:"A Mac binary",
+     means:"The mark of a Mac program built for one kind of chip. The format is called Mach-O. Read backwards, the bytes say FE ED FA CF, an engineers' joke on \"feed face\".",
+     where:"On my Mac: git, 4,102,416 bytes, built for Apple chips only."},
+    {name:"Mac program, two chips (ls)", bytes:"CA FE BA BE", spell:"· · · ·", title:"Two editions in one cover",
+     means:"A universal Mac program: one file carrying an Intel edition (x86_64) and an Apple chip edition (arm64e). When you run it, the Mac picks the edition that matches its chip. The letters are another engineers' pun.",
+     where:"On my Mac: /bin/ls, the command that lists a folder's register."}
+  ];
+  safe("postmarks", function(){
+    var list = $("pmList"), card = $("pmCard");
+    if (!list || !card) return;
+    var btns = PM.map(function(p, i){
+      var li = document.createElement("li");
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "pm-item"; b.setAttribute("aria-pressed", "false");
+      b.innerHTML = '<span>' + esc(p.name) + '</span><span class="mono">' + esc(p.bytes.split(" ").slice(0, 4).join(" ")) + '</span>';
+      b.addEventListener("click", function(){ show(i); });
+      li.appendChild(b); list.appendChild(li);
+      return b;
+    });
+    function show(i){
+      var p = PM[i];
+      btns.forEach(function(b, j){ b.setAttribute("aria-pressed", j === i ? "true" : "false"); });
+      card.innerHTML =
+        '<svg class="wave" viewBox="0 0 70 34" aria-hidden="true" style="fill:none;stroke:var(--violet);stroke-width:2.5"><path d="M2,8 q8,-6 16,0 t16,0 t16,0 t16,0"/><path d="M2,18 q8,-6 16,0 t16,0 t16,0 t16,0"/><path d="M2,28 q8,-6 16,0 t16,0 t16,0 t16,0"/></svg>' +
+        '<div class="eyebrow">First bytes</div>' +
+        '<div class="big">' + esc(p.bytes) + '</div>' +
+        '<div class="spell">spells: ' + esc(p.spell) + '</div>' +
+        '<h3>' + esc(p.title) + '</h3>' +
+        '<p>' + esc(p.means) + '</p>' +
+        '<div class="where">' + esc(p.where) + '</div>';
+    }
+    show(0);
+  });
+
+  /* ---------- COUNTER 6: one instruction, two chips ---------- */
+  var CHIPS = {
+    arm:{asm:"add w0, w0, #1", bytes:"00 04 00 11", say:"On an Apple chip, \"add 1\" is this 4-byte word. Every arm64 instruction is exactly 4 bytes long."},
+    x86:{asm:"add eax, 1", bytes:"83 C0 01", say:"On an Intel chip the same idea is 3 different bytes; Intel instructions run from 1 to 15 bytes long. Hand these bytes to an Apple chip and it reads nonsense. That is why a binary is built for one chip, and why /bin/ls carries two editions. A Mac with an Apple chip can still run many Intel-only programs through Rosetta, a built-in translator that rewrites them for the Apple chip the first time they run."}
+  };
+  safe("chips", function(){
+    var asm = $("chipAsm"), by = $("chipBytes"), say = $("chipSay");
+    if (!asm || !by || !say) return;
+    function show(k){
+      var c = CHIPS[k]; if (!c) return;
+      asm.textContent = c.asm; by.textContent = c.bytes; say.textContent = c.say;
+      Array.prototype.forEach.call(document.querySelectorAll("#binary [data-chip]"), function(b){
+        b.setAttribute("aria-pressed", b.getAttribute("data-chip") === k ? "true" : "false");
+      });
+    }
+    Array.prototype.forEach.call(document.querySelectorAll("#binary [data-chip]"), function(b){
+      b.addEventListener("click", function(){ show(b.getAttribute("data-chip")); });
+    });
+    show("arm");
+  });
+
+  /* ---------- COUNTER 7: the PATH search ---------- */
+  var DIRS = [
+    ["~/.local/bin", "my own small tools"],
+    ["~/bin", "my own scripts"],
+    ["/opt/homebrew/bin", "Homebrew programs"],
+    ["/opt/homebrew/sbin", "Homebrew admin programs"],
+    ["~/.local/bin", "listed a second time"],
+    ["~/bin", "listed a second time"],
+    ["~/.nix-profile/bin", "nix, my personal profile"],
+    ["/etc/profiles/per-user/triyambak/bin", "installed by my dotfiles, for me"],
+    ["/run/current-system/sw/bin", "installed by my dotfiles, system-wide"],
+    ["/nix/var/nix/profiles/default/bin", "nix itself"],
+    ["/usr/local/bin", "older installers"],
+    ["/usr/bin", "Apple, part of macOS"],
+    ["/bin", "Apple, core commands"],
+    ["/usr/sbin", "Apple, admin commands"],
+    ["/sbin", "Apple, core admin commands"]
+  ];
+  // 1-based folder numbers where `which -a` found each command.
+  var FOUND = {
+    git:[8,12], zsh:[8,9,13], python3:[3,12], ls:[13], jev:[1,5], herdr:[3], nvim:[8], tally:[]
+  };
+  var NOTES = {
+    git:"Two copies. My dotfiles' git (version 2.54.0) wins at folder 8. Apple's copy in /usr/bin at folder 12 is never reached. The winner is itself a shortcut into /nix/store, like the ~/.zshrc slip at Counter 2.",
+    zsh:"Three copies. Mine at folder 8 wins. nix-darwin's at 9 and Apple's /bin/zsh at 13 are never reached.",
+    python3:"Homebrew's Python at folder 3 wins over Apple's at folder 12. When two versions of a tool behave differently, this order is usually the reason.",
+    ls:"Only Apple's copy exists, so the clerk checks 12 folders and finds it at 13.",
+    jev:"Found at the very first folder. The same folder is listed again at 5, which is harmless: the search has already stopped.",
+    herdr:"Homebrew's copy, found at folder 3.",
+    nvim:"My dotfiles' copy, found at folder 8.",
+    tally:"tally is a made-up name. No folder holds it, so after checking all 15 the shell gives up."
+  };
+  safe("path", function(){
+    var list = $("pathList"), pickEl = $("cmdPick"), run = $("cmdRun"), res = $("cmdResult"), say = $("cmdSay");
+    if (!list || !pickEl || !run || !res || !say) return;
+    var rows = DIRS.map(function(d, i){
+      var li = document.createElement("li");
+      li.innerHTML = '<span class="ix">' + (i + 1) + '</span><span class="dir">' + esc(d[0]) + '<br><small class="tiny">' + esc(d[1]) + '</small></span><span class="tag"></span>';
+      list.appendChild(li);
+      return li;
+    });
+    var token = 0;
+    function clear(){ rows.forEach(function(r){ r.className = ""; r.querySelector(".tag").textContent = ""; }); }
+    function finish(cmd, winAt){
+      var hits = FOUND[cmd] || [];
+      rows.forEach(function(r, i){
+        var n = i + 1;
+        if (winAt && n > winAt){
+          if (hits.indexOf(n) !== -1){ r.className = "shadow"; r.querySelector(".tag").textContent = "never reached"; }
+          else r.className = "skip";
+        }
+      });
+      if (winAt){
+        res.className = "result";
+        res.textContent = "→ runs " + DIRS[winAt - 1][0] + "/" + cmd;
+      } else {
+        res.className = "result nf";
+        res.textContent = "zsh: command not found: " + cmd;
+      }
+      say.textContent = NOTES[cmd] || "";
+    }
+    function search(cmd, animate){
+      var my = ++token;
+      clear();
+      res.className = "result"; res.textContent = "searching for " + cmd + " …"; say.textContent = "";
+      var hits = FOUND[cmd] || [];
+      var winAt = hits.length ? hits[0] : 0;
+      var last = winAt || DIRS.length;
+      if (!animate){
+        for (var i = 0; i < last; i++){
+          rows[i].className = (i + 1 === winAt) ? "win" : "miss";
+          if (i + 1 === winAt) rows[i].querySelector(".tag").textContent = "runs";
+        }
+        finish(cmd, winAt); return;
+      }
+      var i2 = 0;
+      (function tick(){
+        if (my !== token) return;
+        if (i2 > 0) rows[i2 - 1].className = (i2 === winAt) ? "win" : "miss";
+        if (i2 > 0 && i2 === winAt){ rows[i2 - 1].querySelector(".tag").textContent = "runs"; finish(cmd, winAt); return; }
+        if (i2 >= last){ finish(cmd, winAt); return; }
+        rows[i2].className = "checking";
+        i2++;
+        setTimeout(tick, 150);
+      })();
+    }
+    pickEl.addEventListener("change", function(){ search(pickEl.value, !reduced); });
+    run.addEventListener("click", function(){ search(pickEl.value, !reduced); });
+    search(pickEl.value || "git", false);
+  });
+})();
+</script>
+</body>
+</html>

@@ -3,8 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Indicators & tools published by S Triyambaka Patro - Pine Script indicators for TradingView, with full long-form documentation for each.">
-  <title>Tools & Indicators · S Triyambaka Patro</title>
+  <meta name="description" content="Playground by S Triyambaka Patro - interactive explainers and experiments built to understand how things work, one hands-on page at a time.">
+  <title>Playground · S Triyambaka Patro</title>
+  <link rel="canonical" href="https://triyambak.in/playground/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="S Triyambaka Patro">
+  <meta property="og:title" content="Playground · S Triyambaka Patro">
+  <meta property="og:description" content="Interactive explainers and experiments, built to understand how things work, one hands-on page at a time.">
+  <meta property="og:url" content="https://triyambak.in/playground/">
+  <meta property="og:image" content="https://triyambak.in/playground/inside-a-file/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@Triyambak_CA">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
@@ -35,8 +46,8 @@
       <li><a href="/#practice">Practice</a></li>
       <li><a href="/#qualifications">Qualifications</a></li>
       <li><a href="/#skills">Skills</a></li>
-      <li><a href="/tools/" class="active">Tools</a></li>
-      <li><a href="/playground/">Playground</a></li>
+      <li><a href="/tools/">Tools</a></li>
+      <li><a href="/playground/" class="active">Playground</a></li>
       <li><a href="/#contact">Contact</a></li>
     </ul>
     <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
@@ -59,24 +70,17 @@
 
   <main>
 
-    <!-- ════════════════ TOOLS HUB ════════════════ -->
-    <section id="tools-hub" style="padding-top: 140px;">
+    <!-- ════════════════ PLAYGROUND HUB ════════════════ -->
+    <section id="playground-hub" style="padding-top: 140px;">
       <div class="container">
-        <p class="eyebrow">Tools</p>
-        <h2 class="sec-title">Indicators &amp; <em>Tools</em></h2>
+        <p class="eyebrow">Playground</p>
+        <h2 class="sec-title">The <em>Playground</em></h2>
 
         <p style="font-size: 15.5px; font-weight: 300; color: var(--t2); line-height: 1.85; max-width: 720px; margin-bottom: 44px;">
-          A growing library of Pine Script indicators published on TradingView, each with long-form documentation - formula, inputs, signal interpretation, and how I use them in practice.
+          Interactive explainers and experiments I build to understand how things work, and to show others. Each one is a single page you can take apart: turn a dial, flip a switch, and watch what happens underneath.
         </p>
 
-        <div class="filter-row" id="toolsFilters">
-          <button class="filter-btn active" data-filter="all">All</button>
-          <button class="filter-btn" data-filter="published">Published</button>
-          <button class="filter-btn" data-filter="beta">Beta</button>
-          <button class="filter-btn" data-filter="coming-soon">Coming Soon</button>
-        </div>
-
-        <div class="content-grid" id="toolsGrid"></div>
+        <div class="content-grid" id="playgroundGrid"></div>
       </div>
     </section>
 
@@ -90,81 +94,80 @@
   <script>
 
     /* ══════════════════════════════════════════════════════
-       🛠  TOOLS LIST - Add indicators here
+       🧪  PLAYGROUND LIST - Add experiments here
        ══════════════════════════════════════════════════════
        TEMPLATE:
        {
-         name:     "Indicator Name",
-         slug:     "url-slug",                  // matches /tools/<slug>/
+         name:     "Experiment Name",
+         slug:     "url-slug",                  // matches /playground/<slug>/
          tagline:  "One-line description for the card.",
-         summary:  "1-2 sentence description, used as the detail page's <meta description> and for SEO/OG.",
-         category: "Volatility | Breadth | Trend | Momentum | Other",
-         status:   "published | beta | coming-soon",
-         tvLink:   "https://www.tradingview.com/script/...",
-         updated:  "Apr 2026",
+         summary:  "1-2 sentence description, used as the cover page's <meta description> and og:description.",
+         category: "3D lab | Explainer | Tool | Other",
+         status:   "live | beta | coming-soon",
+         updated:  "Sep 2026",
        },
+       The card image is /playground/<slug>/og.png (1200x630), the same file the
+       cover page uses for link previews on LinkedIn and X.
        ══════════════════════════════════════════════════════ */
 
-    const TOOLS_LIST = [
+    const PLAYGROUND_LIST = [
       {
-        name:     "Relative Measured Volatility (RMV)",
-        slug:     "rmv",
-        tagline:  "Tightness oscillator for spotting compression before breakouts - any tight setup, not just VCP.",
-        summary:  "A 0-100 oscillator that measures price tightness - today's bar versus the loudest of recent prior bars. Built for spotting compression before breakouts on NSE daily charts.",
-        category: "Volatility",
-        status:   "published",
-        tvLink:   "https://www.tradingview.com/script/pPTM0BgL-Relative-Measured-Volatility-RMV-Spot-Tight-Entry-Zones/",
-        updated:  "May 2026",
+        name:     "Inside a File",
+        slug:     "inside-a-file",
+        tagline:  "Turn a dial and take a file apart, from the icon you click down to the bytes on the disk. Then read the same bytes as text, a picture, or a program.",
+        summary:  "A hands-on 3D lab: turn the dial and take a file apart, from the icon you click down to the bytes on the disk.",
+        category: "3D lab",
+        status:   "live",
+        updated:  "Sep 2026",
+      },
+      {
+        name:     "Byte Sorting Office",
+        slug:     "byte-sorting-office",
+        tagline:  "How a Mac stores files, and what a binary really is, told as a post office sorting room with real numbers from my own Mac.",
+        summary:  "How a Mac stores files, and what a binary really is, told as a post office sorting room with real numbers from my own Mac.",
+        category: "Explainer",
+        status:   "live",
+        updated:  "Sep 2026",
       },
     ];
 
     /* status → existing badge variant + display label */
     const STATUS_MAP = {
-      "published":   { cls: "s-completed", label: "Published" },
+      "live":        { cls: "s-completed", label: "Live" },
       "beta":        { cls: "s-watching",  label: "Beta" },
       "coming-soon": { cls: "s-queue",     label: "Coming Soon" },
     };
 
-    function renderTools(filter = 'all') {
-      const grid = document.getElementById('toolsGrid');
-      const items = filter === 'all' ? TOOLS_LIST : TOOLS_LIST.filter(t => t.status === filter);
-
-      if (!items.length) {
+    function renderPlayground() {
+      const grid = document.getElementById('playgroundGrid');
+      if (!PLAYGROUND_LIST.length) {
         grid.innerHTML = `
           <div class="empty-state">
-            <div class="es-icon">🛠</div>
-            <div class="es-title">No tools in this view</div>
-            <div class="es-text">Try a different filter, or check back soon.</div>
+            <div class="es-icon">🧪</div>
+            <div class="es-title">Nothing here yet</div>
+            <div class="es-text">Check back soon.</div>
           </div>`;
         return;
       }
-
-      grid.innerHTML = items.map(t => {
-        const s = STATUS_MAP[t.status] || STATUS_MAP['coming-soon'];
-        const detailHref = `/tools/${t.slug}/`;
+      grid.innerHTML = PLAYGROUND_LIST.map(p => {
+        const s = STATUS_MAP[p.status] || STATUS_MAP['coming-soon'];
+        const href = `/playground/${p.slug}/`;
         return `
-          <a class="glass content-card tool-card" href="${detailHref}">
-            <span class="tag cat-tag">${t.category}</span>
-            <div class="cc-title">${t.name}</div>
-            <div class="cc-sub">${t.tagline}</div>
-            <div class="cc-footer">
-              <span class="status-badge ${s.cls}">
-                <span class="status-dot"></span>${s.label}
-              </span>
-              <span class="cc-meta">${t.updated || ''}</span>
+          <a class="glass content-card tool-card pg-card" href="${href}">
+            <img class="pg-thumb" src="${href}og.png" alt="" loading="lazy" width="1200" height="630">
+            <div class="pg-body">
+              <span class="tag cat-tag">${p.category}</span>
+              <div class="cc-title">${p.name}</div>
+              <div class="cc-notes">${p.tagline}</div>
+              <div class="cc-footer">
+                <span class="status-badge ${s.cls}">
+                  <span class="status-dot"></span>${s.label}
+                </span>
+                <span class="cc-meta">${p.updated || ''}</span>
+              </div>
             </div>
           </a>`;
       }).join('');
-    }
-
-    function bindFilters(containerId, renderFn) {
-      document.getElementById(containerId).querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.getElementById(containerId).querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          renderFn(btn.dataset.filter);
-        });
-      });
     }
 
     /* ── Cursor glow ── */
@@ -191,8 +194,7 @@
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
     /* ── Init ── */
-    renderTools();
-    bindFilters('toolsFilters', renderTools);
+    renderPlayground();
 
   </script>
 </body>

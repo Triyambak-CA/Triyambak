@@ -142,7 +142,7 @@
 
     /* Mobile menu */
     .mobile-menu {
-      display: none; position: fixed; inset: 0; z-index: 999;
+      display: none; position: fixed; inset: 0; z-index: 1001;
       background: rgba(7,7,7,0.97);
       backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
       flex-direction: column; align-items: center; justify-content: center; gap: 20px;
@@ -634,10 +634,12 @@
     /* ─────────────────────────────────────────
        RESPONSIVE
     ───────────────────────────────────────── */
-    @media (max-width: 960px) {
+    @media (max-width: 1044px) {
       nav { padding: 0 24px; }
       .nav-links { display: none; }
       .nav-hamburger { display: flex; }
+    }
+    @media (max-width: 960px) {
       .container { padding: 0 24px; }
       .hero-inner { grid-template-columns: 1fr; gap: 48px; }
       .hero-photo-wrap { max-width: 270px; margin: 0 auto; }
@@ -653,6 +655,10 @@
       .content-grid { grid-template-columns: 1fr; }
       .stats-bar { grid-template-columns: 1fr 1fr; }
       footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px; }
+    }
+    @media (max-width: 480px) {
+      .tl-head { flex-wrap: wrap; }
+      .tl-period { white-space: normal; }
     }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -858,3 +864,13 @@
   .rank-table tbody tr:last-child { border-bottom: none; }
   .rank-table td { padding: 4px 0; border: none; }
 }
+
+/* ════════════════ PLAYGROUND SECTION ════════════════ */
+/* Hub cards carry a preview image; detail pages carry a video or image frame. Tokens only. */
+.pg-card { padding: 0; gap: 0; overflow: hidden; }
+.pg-thumb { display: block; width: 100%; height: auto; aspect-ratio: 1200 / 630; object-fit: cover; background: var(--bg); border-bottom: 1px solid var(--border); }
+.pg-body { padding: 22px 26px 24px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.pg-body .cat-tag { align-self: flex-start; }
+.pg-media { margin-top: 8px; max-width: 1040px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); background: var(--bg); box-shadow: inset 0 1px 0 rgba(255,255,255,0.07); }
+.pg-media video, .pg-media img { display: block; width: 100%; height: auto; }
+.pg-caption { font-family: var(--font-m); font-size: 10.5px; color: var(--t3); margin-top: 12px; }

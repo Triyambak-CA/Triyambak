@@ -54,6 +54,7 @@ All defined in `:root` at the top of `assets/site.css`. Never invent new values;
 - `.container` — `max-width: 1140px`, centred, `0 36px` side padding.
 - `section` — `108px 0` vertical padding (homepage). Tools detail pages use lighter `60px 0` per section since each page has many.
 - Background ambience — `.bg-layer` with three blurred orbs (`.orb-1/2/3`), grid lines, plus a JS-driven `#cursor-glow`.
+- Breakpoints - the nav switches to the hamburger menu at `max-width: 1044px` (below that the full link row no longer fits beside the logo on one line), while page layout (container padding, hero, grids, stats bar) switches at `max-width: 960px` and again at `600px`. At `max-width: 480px` each experience date (`.tl-period`) moves onto its own line under the role title (`.tl-head` wraps) and may itself wrap, so a long date cannot push the homepage wider than a phone screen.
 
 ---
 
@@ -117,6 +118,24 @@ Components introduced for `/tools/` hub and `/tools/<slug>/` detail pages. All b
 | `.changelog` | Version-history list. Each entry is `<li class="cl-item">` containing `.cl-version`, `.cl-date`, `.cl-body`. `.cl-body ul` renders as a regular bulleted list. |
 
 **Status mapping for Tools:** `published` → `s-completed`, `beta` → `s-watching`, `coming-soon` → `s-queue`.
+
+---
+
+## Playground Section Additions
+
+Components for the `/playground/` hub and `/playground/<slug>/` cover pages. Tokens only; no new colours, fonts or radii.
+
+| Class | Purpose |
+|---|---|
+| `.pg-card` | Modifier on `.glass.content-card.tool-card` for hub cards: removes the card padding so a preview image can run edge to edge. |
+| `.pg-thumb` | The card's preview image, 1200×630 aspect (the same file as the page's `og.png`), with a bottom divider. |
+| `.pg-body` | Padded column under the thumbnail holding the tag, title, notes and footer. Keeps the category `.tag` at its natural width. |
+| `.pg-media` | Rounded, bordered frame for a looping demo video or screenshot on a cover page. |
+| `.pg-caption` | Mono caption under `.pg-media`. |
+
+**Status mapping for Playground:** `live` → `s-completed`, `beta` → `s-watching`, `coming-soon` → `s-queue`.
+
+Each experiment is a folder `/playground/<slug>/` with a themed cover page (`index.html`) and, when the experiment is a full-screen app with its own look, the app itself beside it (e.g. `lab.html`), copied in unchanged. The cover page carries the Open Graph tags, so links shared on LinkedIn or X show a preview card.
 
 ---
 
