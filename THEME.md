@@ -54,7 +54,7 @@ All defined in `:root` at the top of `assets/site.css`. Never invent new values;
 - `.container` — `max-width: 1140px`, centred, `0 36px` side padding.
 - `section` — `108px 0` vertical padding (homepage). Tools detail pages use lighter `60px 0` per section since each page has many.
 - Background ambience — `.bg-layer` with three blurred orbs (`.orb-1/2/3`), grid lines, plus a JS-driven `#cursor-glow`.
-- Breakpoints - the nav switches to the hamburger menu at `max-width: 1044px` (below that the full link row no longer fits beside the logo on one line), while page layout (container padding, hero, grids, stats bar) switches at `max-width: 960px` and again at `600px`.
+- Breakpoints - the nav switches to the hamburger menu at `max-width: 1044px` (below that the full link row no longer fits beside the logo on one line), while page layout (container padding, hero, grids, stats bar) switches at `max-width: 960px` and again at `600px`. At `max-width: 480px` the experience dates (`.tl-period`) may wrap, so a long date cannot push the homepage wider than a phone screen.
 
 ---
 
