@@ -97,7 +97,7 @@
      braille wheels keep their shape even where the fallback font is wider. */
   .termwrap{overflow-x:auto;background:var(--t-bg)}
   .term{background:var(--t-bg);color:var(--t-fg);font-family:var(--mono);font-size:14px;padding:12px 14px 14px;
-    min-width:calc(94ch + 28px);font-variant-numeric:normal}
+    min-width:calc(95ch + 28px);font-variant-numeric:normal}
   .tr{white-space:pre;height:1.32em;line-height:1.32em}
   .tc{display:inline-block;width:1ch;text-align:center;overflow:visible;vertical-align:top}
   .tc.d{color:var(--t-dim)} .tc.t{color:var(--t-track)} .tc.g{color:var(--t-g)} .tc.y{color:var(--t-y)}
@@ -146,7 +146,7 @@
   </div>
 </div>
 
-<p class="lede"><b>Chosen 02-Oct-2026: the pace bar with the forecast sentence</b> (design 3's bar, design 4's words, for both windows). It is what my status line script now prints, in these exact colours, and it stays within 92 columns. When a window would run dry, the sentence also says when it refills. The first draft's dots answered "how much have I used?"; this also answers "at this rate, will I run out before it refills?", by comparing the share of the limit used with the share of the window that has passed. 48% used when only 31% of the five hours has gone means spending about 1.5 times faster than the limit allows. The designs under "Considered, not chosen" stay as the working behind the choice.</p>
+<p class="lede"><b>Chosen 02-Oct-2026: the pace bar with the forecast sentence</b> (design 3's bar, design 4's words, for both windows). It is what my status line script now prints, in these exact colours, and it stays within 93 columns. When a window would run dry, the sentence also says when it refills. The first draft's dots answered "how much have I used?"; this also answers "at this rate, will I run out before it refills?", by comparing the share of the limit used with the share of the window that has passed. 48% used when only 31% of the five hours has gone means spending about 1.5 times faster than the limit allows. The designs under "Considered, not chosen" stay as the working behind the choice.</p>
 
 <section>
   <div class="srule"><h2>The chosen design and the alternatives, live</h2><span class="fill"></span><span class="ref">drag a lever or pick a scenario; every panel redraws</span></div>
@@ -202,7 +202,7 @@
 
 <script>
 "use strict";
-const W = 92;                       // terminal width the mock draws to, the chosen design's limit
+const W = 93;                       // terminal width the mock draws to, the chosen design's limit
 const BLANK = "⠀";             // braille blank: looks empty, survives Claude Code's trim()
 const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 const EIGHTHS = ["","▏","▎","▍","▌","▋","▊","▉"];
@@ -340,7 +340,7 @@ function outlook(w) {
 /* ---------------------------------------------------------------- the designs */
 const DESIGNS = [
 { id: "chosen", name: "Chosen: pace bar with the forecast", q: "Am I ahead of the clock, and if not, when do I run dry?", pick: true,
-  tags: [["3 rows", "ok"], ["Claude Code's data only", "ok"], ["92 columns at most", "ok"]],
+  tags: [["3 rows", "ok"], ["Claude Code's data only", "ok"], ["93 columns at most", "ok"]],
   note: "<b>Picked 02-Oct-2026.</b> Design 3's bar with design 4's sentence on both windows, plus the refill time, exactly as my script prints it. The bar fills with what you have used; the <b>white post is the clock</b>. The words assume you keep spending at the window's average rate so far, so an early burst reads \"runs dry\" until the hours catch up.",
   draw(w5, ww) {
     const meter = (label, w, refill) => {
