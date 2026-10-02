@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Status line, redrawn</title>
+<style>
+/* Seven designs for the Claude Code status line, compared live. Every terminal panel below is drawn cell by cell with
+   characters a terminal can print, so what shows here is what the script could
+   produce, give or take the font. */
+  :root{
+    --sheet:#F2F3F0; --panel:#FBFBF9; --ink:#16191A; --ink-2:#565D60;
+    --rule:#BFC4C0; --rule-soft:#DCDFDA;
+    --fill:#0B6B72; --fill-18:rgba(11,107,114,.18); --fill-30:rgba(11,107,114,.30);
+    --mark:#8F5600;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:"Helvetica Neue",Helvetica,Arial,"Liberation Sans",sans-serif;
+    /* a dark terminal palette */
+    --t-bg:#101010; --t-fg:#E6E6E6; --t-dim:#707070; --t-track:#3E3E3E;
+    --t-g:#99FFE4; --t-y:#FFC799; --t-r:#FF8A8A; --t-c:#8FD3FF; --t-m:#D9B3FF; --t-w:#FFFFFF;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scrollbar-color:var(--rule) var(--sheet)}
+  body{margin:0 auto;background:var(--sheet);color:var(--ink);font-family:var(--sans);
+    font-size:13.5px;line-height:1.55;font-variant-numeric:tabular-nums;padding:22px 18px 64px;max-width:1180px}
+  ::selection{background:var(--fill-30);color:var(--ink)}
+  :focus-visible{outline:2px solid var(--fill);outline-offset:2px}
+  .dim{color:var(--ink-2)}
+
+  .titleblock{border:1px solid var(--ink);background:var(--panel)}
+  .tb-main{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:14px;padding:14px 16px 12px}
+  .tb-main h1{margin:0;font-size:21px;line-height:1.12;font-weight:600;letter-spacing:-.015em}
+  .tb-sub{font-size:11.5px;color:var(--ink-2);margin-top:5px}
+  .tb-ref{text-align:right;font-family:var(--mono);font-size:11px;color:var(--ink-2);line-height:1.7;white-space:nowrap}
+  .tb-ref b{color:var(--ink);font-weight:600}
+  .tb-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--ink)}
+  .tb-cell{padding:7px 12px;border-left:1px solid var(--rule);min-width:0}
+  .tb-cell:first-child{border-left:none}
+  .tb-cell .k{font-size:11px;color:var(--ink-2)}
+  .tb-cell .v{font-family:var(--mono);font-size:12.5px;font-weight:600;margin-top:1px}
+
+  .lede{font-size:13.5px;color:var(--ink-2);max-width:78ch;margin:16px 0 4px;line-height:1.6}
+  .lede b{color:var(--ink);font-weight:600}
+
+  section{margin:30px 0 0}
+  .srule{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--ink);padding-bottom:5px;margin-bottom:14px}
+  .srule h2{margin:0;font-size:15px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+  .srule .fill{flex:1}
+  .srule .ref{font-family:var(--mono);font-size:11px;color:var(--ink-2);white-space:nowrap}
+
+  .work{display:grid;grid-template-columns:minmax(0,290px) minmax(0,1fr);gap:16px;align-items:start}
+  .work>*{min-width:0}
+  .panel{border:1px solid var(--ink);background:var(--panel);padding:14px 15px 16px;position:sticky;top:12px}
+  .panel h3{margin:0 0 3px;font-size:12.5px;font-weight:600}
+  .phint{font-size:11px;color:var(--ink-2);margin:0 0 14px}
+  .subrule{display:flex;align-items:center;gap:9px;margin:18px 0 12px;font-size:11px;color:var(--ink-2)}
+  .subrule::after{content:"";flex:1;height:1px;background:var(--rule)}
+
+  .ctrl{margin-bottom:15px}
+  .crow{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:5px}
+  .crow label{font-size:12px;line-height:1.3}
+  .crow .val{font-family:var(--mono);font-size:13px;font-weight:600;white-space:nowrap}
+  .rail{position:relative;padding-top:3px}
+  .rail::before{content:"";position:absolute;left:0;right:0;top:19px;height:5px;pointer-events:none;
+    background:repeating-linear-gradient(to right,var(--rule) 0 1px,transparent 1px 10%)}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:16px;background:transparent;outline:none;margin:0;display:block;cursor:pointer}
+  input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--ink)}
+  input[type=range]::-moz-range-track{height:2px;background:var(--ink)}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:11px;height:16px;margin-top:-7px;
+    background:var(--panel);border:1.5px solid var(--ink);box-shadow:inset 0 0 0 1px var(--panel),inset 0 -6px 0 -5px var(--fill);cursor:grab}
+  input[type=range]::-moz-range-thumb{width:11px;height:16px;border-radius:0;background:var(--panel);border:1.5px solid var(--ink);cursor:grab}
+  .rlabels{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--ink-2);margin-top:7px}
+
+  .presets{display:flex;flex-wrap:wrap;gap:6px}
+  .presets button{font:inherit;font-size:11.5px;padding:4px 8px;background:var(--panel);color:var(--ink);
+    border:1px solid var(--ink);border-radius:0;cursor:pointer}
+  .presets button:hover{background:var(--fill-18)}
+  .presets button.on{background:var(--ink);color:var(--panel)}
+
+  .cards{display:grid;gap:14px}
+  .card{border:1px solid var(--ink);background:var(--panel)}
+  .card-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;padding:10px 13px 8px;border-bottom:1px solid var(--rule)}
+  .card-h h3{margin:0;font-size:13.5px;font-weight:600}
+  .card-h .num{font-family:var(--mono);font-size:11px;color:var(--ink-2)}
+  .card-h .q{font-size:12px;color:var(--ink-2);flex-basis:100%}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;padding:0 13px 10px}
+  .tag{font-size:11px;font-weight:600;letter-spacing:.02em;padding:1px 7px;border:1px solid var(--ink)}
+  .tag.ok{background:var(--fill-18);border-color:var(--fill);color:var(--fill)}
+  .tag.ref{border-style:dashed}
+  .tag.cost{background-image:repeating-linear-gradient(-45deg,var(--rule) 0 1px,transparent 1px 5px)}
+  .card .note{font-size:12px;color:var(--ink-2);padding:9px 13px 12px;line-height:1.55;border-top:1px solid var(--rule-soft)}
+  .card .note b{color:var(--ink);font-weight:600}
+  .card.pick{box-shadow:inset 4px 0 0 0 var(--fill)}
+  .grouphead{font-size:12px;font-weight:600;color:var(--ink-2);border-bottom:1px solid var(--rule);padding:14px 0 5px}
+
+  /* The terminal. One span per cell, each exactly one character wide, so the
+     braille wheels keep their shape even where the fallback font is wider. */
+  .termwrap{overflow-x:auto;background:var(--t-bg)}
+  .term{background:var(--t-bg);color:var(--t-fg);font-family:var(--mono);font-size:14px;padding:12px 14px 14px;
+    min-width:calc(94ch + 28px);font-variant-numeric:normal}
+  .tr{white-space:pre;height:1.32em;line-height:1.32em}
+  .tc{display:inline-block;width:1ch;text-align:center;overflow:visible;vertical-align:top}
+  .tc.d{color:var(--t-dim)} .tc.t{color:var(--t-track)} .tc.g{color:var(--t-g)} .tc.y{color:var(--t-y)}
+  .tc.r{color:var(--t-r)} .tc.c{color:var(--t-c)} .tc.m{color:var(--t-m)} .tc.w{color:var(--t-w);font-weight:700}
+  .tc.b{color:var(--t-fg);font-weight:700}
+  .tc.cur{background:var(--t-y)}
+  .tc.bx{height:1.32em}
+  .tc.bx svg{display:block;width:100%;height:100%}
+
+  .cols2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  .box{border:1px solid var(--ink);background:var(--panel);padding:13px 16px 14px}
+  .box h3{margin:0 0 9px;font-size:12.5px;font-weight:600}
+  .box ul{margin:0;padding-left:16px;font-size:12.5px;line-height:1.6}
+  .box li{margin-bottom:7px}
+  .box li:last-child{margin-bottom:0}
+  code{font-family:var(--mono);font-size:.92em}
+  .footnote{font-size:11.5px;color:var(--ink-2);line-height:1.6;border-top:1px solid var(--rule);padding-top:12px;margin-top:26px;max-width:92ch}
+
+  @media(max-width:1000px){ .work{grid-template-columns:1fr} .panel{position:static;max-width:520px} }
+  @media(max-width:760px){
+    .tb-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .tb-cell{border-top:1px solid var(--rule)}
+    .tb-cell:first-child,.tb-cell:nth-child(2){border-top:none}
+    .tb-cell:nth-child(odd){border-left:none}
+    body{padding:16px 14px 52px}
+    .tb-main h1{font-size:18px}
+  }
+</style>
+</head>
+<body>
+<p style="margin:0 0 12px;font-size:12px"><a href="./" style="color:var(--ink-2)">&larr; Claude Code Status Line &middot; Playground &middot; triyambak.in</a></p>
+
+<div class="titleblock">
+  <div class="tb-main">
+    <div>
+      <h1>Status line, redrawn</h1>
+      <div class="tb-sub">The design chosen for the Claude Code status line, shown first, with the seven it was picked from. Each is drawn with characters a terminal can really print.</div>
+    </div>
+    <div class="tb-ref"><b>triyambak.in</b> &middot; <a href="./" style="color:inherit">Playground</a><br>02-Oct-2026</div>
+  </div>
+  <div class="tb-strip">
+    <div class="tb-cell"><div class="k">5-hour window</div><div class="v" id="s5"></div></div>
+    <div class="tb-cell"><div class="k">5-hour pace</div><div class="v" id="p5"></div></div>
+    <div class="tb-cell"><div class="k">Weekly window</div><div class="v" id="sw"></div></div>
+    <div class="tb-cell"><div class="k">Weekly pace</div><div class="v" id="pw"></div></div>
+  </div>
+</div>
+
+<p class="lede"><b>Chosen 02-Oct-2026: the pace bar with the forecast sentence</b> (design 3's bar, design 4's words, for both windows). It is what my status line script now prints, in these exact colours, and it stays within 92 columns. When a window would run dry, the sentence also says when it refills. The first draft's dots answered "how much have I used?"; this also answers "at this rate, will I run out before it refills?", by comparing the share of the limit used with the share of the window that has passed. 48% used when only 31% of the five hours has gone means spending about 1.5 times faster than the limit allows. The designs under "Considered, not chosen" stay as the working behind the choice.</p>
+
+<section>
+  <div class="srule"><h2>The chosen design and the alternatives, live</h2><span class="fill"></span><span class="ref">drag a lever or pick a scenario; every panel redraws</span></div>
+  <div class="work">
+    <div class="panel">
+      <h3>Scenario</h3>
+      <p class="phint">Each scenario sets the levers below.</p>
+      <div class="presets" id="presets"></div>
+
+      <div class="subrule">5-hour window</div>
+      <div class="ctrl"><div class="crow"><label for="u5">Used</label><span class="val" id="u5v"></span></div>
+        <div class="rail"><input type="range" id="u5" min="0" max="100" step="1"></div>
+        <div class="rlabels"><span>0%</span><span>50%</span><span>100%</span></div></div>
+      <div class="ctrl"><div class="crow"><label for="l5">Time until it refills</label><span class="val" id="l5v"></span></div>
+        <div class="rail"><input type="range" id="l5" min="0" max="300" step="1"></div>
+        <div class="rlabels"><span>0h</span><span>2h 30m</span><span>5h</span></div></div>
+
+      <div class="subrule">Weekly window</div>
+      <div class="ctrl"><div class="crow"><label for="uw">Used</label><span class="val" id="uwv"></span></div>
+        <div class="rail"><input type="range" id="uw" min="0" max="100" step="1"></div>
+        <div class="rlabels"><span>0%</span><span>50%</span><span>100%</span></div></div>
+      <div class="ctrl"><div class="crow"><label for="lw">Time until it refills</label><span class="val" id="lwv"></span></div>
+        <div class="rail"><input type="range" id="lw" min="0" max="168" step="1"></div>
+        <div class="rlabels"><span>0d</span><span>3d 12h</span><span>7d</span></div></div>
+
+      <div class="subrule">This conversation</div>
+      <div class="ctrl"><div class="crow"><label for="cx">Context used</label><span class="val" id="cxv"></span></div>
+        <div class="rail"><input type="range" id="cx" min="0" max="100" step="1"></div>
+        <div class="rlabels"><span>0%</span><span>50%</span><span>100%</span></div></div>
+    </div>
+
+    <div class="cards" id="cards"></div>
+  </div>
+</section>
+
+<section>
+  <div class="srule"><h2>What a terminal allows</h2><span class="fill"></span><span class="ref">why no spinning wheel</span></div>
+  <div class="cols2">
+    <div class="box"><h3>Hard limits every design here respects</h3><ul>
+      <li><b>Text only, one colour per character.</b> A braille character holds a 2 by 4 grid of dots but takes one colour, so where a wheel's filled arc meets its empty track, the colour changes on a character boundary, up to one character late.</li>
+      <li><b>Nothing moves.</b> The line redraws after each message and every 60 seconds. A wheel can show where it stands, never turn.</li>
+      <li><b>Claude Code strips spaces at the start and end of each row.</b> A circle's top row starts with empty space, so the wheels fill it with the invisible braille character instead, which is not counted as a space and keeps the circle from shearing left.</li>
+    </ul></div>
+    <div class="box"><h3>Costs to weigh</h3><ul>
+      <li><b>Every row is a row of conversation you lose.</b> The chosen design uses 3, the wheels 5, the one-liner 1.</li>
+      <li><b>History needs a small file.</b> Claude Code only sends the current numbers. The sparkline and the ledger's "lately" column need the script to jot each reading into a log file, a few hundred bytes a day. Their history here is simulated.</li>
+      <li><b>Braille depends on the terminal.</b> My terminal, WezTerm, draws braille itself rather than from a font (its built-in block glyphs, on by default), spreading the eight dots across the whole character, and the wheels here are drawn that way. A browser or another terminal using a font shows smaller, bunched dots, and the circles look broken there. Check once in the real terminal before choosing a wheel.</li>
+    </ul></div>
+  </div>
+</section>
+
+<p class="footnote">Times are worked out from your device's clock. Pace assumes you keep using the limit at the average rate so far in the window, so it says "too early to tell" during the first tenth of a window, when one busy burst would make the forecast meaningless. Context and folder are shown only to frame the rows; they are not the subject of the mock.</p>
+
+<script>
+"use strict";
+const W = 92;                       // terminal width the mock draws to, the chosen design's limit
+const BLANK = "⠀";             // braille blank: looks empty, survives Claude Code's trim()
+const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const EIGHTHS = ["","▏","▎","▍","▌","▋","▊","▉"];
+const SPARK = ["▁","▂","▃","▄","▅","▆","▇","█"];
+const BRAILLE_BITS = [[0x01,0x08],[0x02,0x10],[0x04,0x20],[0x40,0x80]];
+const H5 = 5 * 3600, H7 = 7 * 86400;
+
+const S = {};                       // lever values
+const PRESETS = [
+  ["Burning fast",      {u5:48, l5:206, uw:42, lw:74,  cx:12}],
+  ["Calm",              {u5:12, l5:240, uw:20, lw:120, cx:31}],
+  ["Near the cap",      {u5:91, l5:40,  uw:78, lw:30,  cx:64}],
+  ["Week nearly spent", {u5:20, l5:150, uw:93, lw:50,  cx:44}],
+  ["Fresh window",      {u5:3,  l5:290, uw:42, lw:74,  cx:5}],
+];
+
+/* ---------------------------------------------------------------- arithmetic */
+function win(used, leftSec, lenSec) {
+  const now = Date.now();
+  const elapsed = Math.max(0, lenSec - leftSec), ef = elapsed / lenSec;
+  const rate = elapsed > 0 ? used / elapsed : 0;           // % per second so far
+  const pace = ef > 0 ? (used / 100) / ef : 0;             // 1.0 = exactly what the limit allows
+  const dryIn = rate > 0 ? (100 - used) / rate : Infinity; // seconds until 100% at this rate
+  const capped = used >= 100, early = ef < 0.10;
+  let state, tone;
+  if (capped)          { state = "at the cap";        tone = "r"; }
+  else if (early)      { state = "too early to tell"; tone = "d"; }
+  else if (pace > 1)   { state = "runs dry";          tone = "r"; }
+  else if (pace >= .85){ state = "tight";             tone = "y"; }
+  else                 { state = "easy";              tone = "g"; }
+  return { used, leftSec, lenSec, ef, pace, dryIn, capped, early, state, tone,
+           atRefill: used + rate * leftSec, resetAt: now + leftSec * 1000, dryAt: now + dryIn * 1000 };
+}
+const toneP = p => p >= 80 ? "r" : p >= 50 ? "y" : "g";
+function fmtLeft(sec) {
+  sec = Math.max(0, Math.round(sec));
+  if (sec < 60) return "<1m";
+  const d = Math.floor(sec / 86400), h = Math.floor(sec % 86400 / 3600), m = Math.floor(sec % 3600 / 60);
+  return d ? `${d}d ${h}h` : h ? `${h}h ${m}m` : `${m}m`;
+}
+function fmtLeftLong(sec) {         // the wording today's script uses
+  const h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60);
+  return h ? `${h}hr ${m}min` : m ? `${m}min` : "<1min";
+}
+function clockOnly(ms) {
+  const d = new Date(ms); let h = d.getHours(); const ap = h >= 12 ? "pm" : "am"; h = h % 12 || 12;
+  return `${h}:${String(d.getMinutes()).padStart(2, "0")}${ap}`;
+}
+const dayClock = ms => `${DAYS[new Date(ms).getDay()]} ${clockOnly(ms)}`;
+const when = ms => new Date(ms).toDateString() === new Date().toDateString() ? clockOnly(ms) : dayClock(ms);
+// a moment told after another: the day only when its date differs from that one
+const after = (ms, ref) => new Date(ms).toDateString() === new Date(ref).toDateString() ? clockOnly(ms) : dayClock(ms);
+const pct = p => `${Math.round(p)}%`;
+
+/* Seeded history, so the simulated shape holds still while the levers move. */
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function history(w, n, seed) {
+  const r = rng(seed), weights = [];
+  for (let i = 0; i < n; i++) { const a = r(), b = r(); weights.push((0.25 + a * 0.75) * (b > 0.78 ? 2.6 : 1)); }
+  const e = w.ef * n, full = Math.floor(e), part = e - full, vals = [];
+  for (let i = 0; i < n; i++) vals.push(i < full ? weights[i] : i === full ? weights[i] * part : null);
+  const sum = vals.reduce((s, v) => s + (v || 0), 0) || 1;
+  return vals.map(v => v === null ? null : v / sum * w.used);
+}
+
+/* ---------------------------------------------------------------- cells */
+const cell = (ch, c = "") => ({ ch, c });
+const txt = (s, c = "") => Array.from(s).map(ch => cell(ch, c));
+const pad = (cells, n) => { const out = cells.slice(0, n); while (out.length < n) out.push(cell(" ")); return out; };
+const sep = () => txt(" │ ", "d");
+function put(row, col, s, c) { Array.from(s).forEach((ch, i) => { row[col + i] = cell(ch, c); }); }
+
+function header() {
+  return [...txt("Opus 5.5"), ...sep(), ...txt("ctx ", "d"), ...txt(pct(S.cx), toneP(S.cx)),
+          ...sep(), ...txt("~/projects/invoice-parser", "c"), ...txt(" "), ...txt("main", "m")];
+}
+
+/* A ring of braille dots. fill and tick are fractions of a turn, clockwise from 12 o'clock. */
+function ring(cols, rows, rOut, rIn, fill, tick, fillTone) {
+  const Wd = cols * 2, Hd = rows * 4, cx = Wd / 2, cy = Hd / 2;
+  const g = [...Array(rows)].map(() => [...Array(cols)].map(() => ({ b: 0, f: 0, t: 0 })));
+  for (let y = 0; y < Hd; y++) for (let x = 0; x < Wd; x++) {
+    const dx = x + .5 - cx, dy = y + .5 - cy, r = Math.hypot(dx, dy);
+    if (r < rIn || r > rOut) continue;
+    let a = Math.atan2(dx, -dy); if (a < 0) a += 2 * Math.PI;
+    const c = g[y >> 2][x >> 1]; c.b |= BRAILLE_BITS[y & 3][x & 1];
+    if (a / (2 * Math.PI) < fill) c.f++; else c.t++;
+  }
+  let tx = -1, ty = -1;
+  if (tick !== null) {
+    const mid = (rIn + rOut) / 2, ta = tick * 2 * Math.PI;
+    tx = Math.min(cols - 1, Math.floor((cx + mid * Math.sin(ta)) / 2));
+    ty = Math.min(rows - 1, Math.floor((cy - mid * Math.cos(ta)) / 4));
+  }
+  return g.map((r, j) => r.map((c, i) => c.b === 0 ? cell(BLANK)
+    : cell(String.fromCharCode(0x2800 + c.b), i === tx && j === ty ? "w" : c.f > 0 && c.f >= c.t ? fillTone : "t")));
+}
+
+/* A half dial for pace: green under 0.85x, amber to 1x, red past it; the needle is white. */
+function speedo(w) {
+  const cols = 11, rows = 3, cx = 11, cy = 12, rO = 10.6, rI = 8.0;
+  const g = [...Array(rows)].map(() => [...Array(cols)].map(() => ({ b: 0, z: [0, 0, 0], n: false })));
+  for (let y = 0; y < rows * 4; y++) for (let x = 0; x < cols * 2; x++) {
+    const dx = x + .5 - cx, dy = y + .5 - cy, r = Math.hypot(dx, dy);
+    if (dy > 0 || r < rI || r > rO) continue;
+    const u = 1 - Math.atan2(-dy, dx) / Math.PI;           // 0 at the left end, 1 at the right
+    const c = g[y >> 2][x >> 1]; c.b |= BRAILLE_BITS[y & 3][x & 1];
+    c.z[u < .425 ? 0 : u <= .5 ? 1 : 2]++;
+  }
+  if (!w.early) {
+    const th = Math.PI * (1 - Math.min(1, w.pace / 2));
+    for (let t = 1.2; t < rI - .6; t += .3) {
+      const x = Math.floor(cx + t * Math.cos(th)), y = Math.floor(cy - t * Math.sin(th));
+      if (y < 0 || y >= rows * 4 || x < 0 || x >= cols * 2) continue;
+      const c = g[y >> 2][x >> 1]; c.b |= BRAILLE_BITS[y & 3][x & 1]; c.n = true;
+    }
+  }
+  return g.map(r => r.map(c => c.b === 0 ? cell(BLANK)
+    : cell(String.fromCharCode(0x2800 + c.b), c.n ? "w" : ["g", "y", "r"][c.z.indexOf(Math.max(...c.z))])));
+}
+
+function paceWords(w) {
+  if (w.capped) return txt("at the cap", "r");
+  if (w.early)  return txt("too early to tell", "d");
+  return txt(`${w.pace.toFixed(1)}× · ${w.state}`, w.tone);
+}
+function outlook(w) {
+  if (w.capped) return txt("wait for the refill", "d");
+  if (w.early)  return txt("", "d");
+  if (w.atRefill > 100) return txt(`empty at ${when(w.dryAt)}`, "r");
+  return txt(`about ${pct(w.atRefill)} at refill`, "d");
+}
+
+/* ---------------------------------------------------------------- the designs */
+const DESIGNS = [
+{ id: "chosen", name: "Chosen: pace bar with the forecast", q: "Am I ahead of the clock, and if not, when do I run dry?", pick: true,
+  tags: [["3 rows", "ok"], ["Claude Code's data only", "ok"], ["92 columns at most", "ok"]],
+  note: "<b>Picked 02-Oct-2026.</b> Design 3's bar with design 4's sentence on both windows, plus the refill time, exactly as my script prints it. The bar fills with what you have used; the <b>white post is the clock</b>. The words assume you keep spending at the window's average rate so far, so an early burst reads \"runs dry\" until the hours catch up.",
+  draw(w5, ww) {
+    const meter = (label, w, refill) => {
+      const total = Math.max(0, Math.min(128, Math.floor(w.used * 128 / 100 + 0.5)));
+      const full = total >> 3, part = total & 7, post = Math.max(0, Math.min(15, Math.floor(w.ef * 16)));
+      let state, words;
+      if (w.leftSec <= 0)        { state = "reset"; words = "refilled · updates after the next reply"; }
+      else if (w.capped)         { state = "cap";   words = `at the cap · refills ${refill}`; }
+      else if (w.early)          { state = "early"; words = `too early to tell · refills ${refill}`; }
+      else if (w.atRefill > 100) { state = "dry";   words = `runs dry at ${when(w.dryAt)}, ${fmtLeft(w.leftSec - w.dryIn)} before the ${after(w.resetAt, w.dryAt)} refill`; }
+      else { state = w.atRefill >= 85 ? "tight" : "easy"; words = `on track for about ${pct(w.atRefill)} by ${refill}`; }
+      const fillTone = { dry: "r", cap: "r", tight: "y", easy: "g", early: toneP(w.used), reset: "t" }[state];
+      const cells = Array.from({ length: 16 }, (_, i) =>
+        state !== "reset" && i === post ? cell("┃", "w")
+        : i < full ? cell("█", fillTone)
+        : i === full && part > 0 ? cell(EIGHTHS[part], fillTone) : cell("░", "t"));
+      const p = state === "reset" ? "--" : pct(w.used);
+      return [...txt(label.padEnd(8)), ...cells, ...txt(" " + p.padStart(4), state === "reset" ? "d" : toneP(w.used)),
+              ...txt("  "), ...txt(words, state === "early" || state === "reset" ? "d" : fillTone)];
+    };
+    return [header(), meter("5-hour", w5, when(w5.resetAt)), meter("weekly", ww, dayClock(ww.resetAt))];
+  } },
+
+{ id: "today", name: "First draft (replaced)", q: "How much have I used, and when does it refill?",
+  tags: [["3 rows", "ref"], ["Claude Code's data only", "ok"]],
+  note: "The first build, replaced by the chosen design the same day. Ten dots, one per 10%, plus the countdown and the reset day. It says nothing about whether you will last.",
+  draw(w5, ww) {
+    const m = (label, w, reset) => [...txt(label.padEnd(8)), ...Array.from({ length: 10 }, (_, i) =>
+      i < Math.min(10, Math.floor(w.used / 10)) ? cell("●") : cell("○", "d")),
+      ...txt(" "), ...txt(pct(w.used).padStart(4), toneP(w.used)), ...txt(" ↻ ", "d"), ...txt(reset)];
+    return [header(), m("current", w5, fmtLeftLong(w5.leftSec)), m("weekly", ww, dayClock(ww.resetAt))];
+  } },
+
+{ id: "wheels", name: "1. Twin wheels", q: "How full is each window, and how far through it am I?",
+  tags: [["5 rows", "cost"], ["Claude Code's data only", "ok"], ["braille: check in WezTerm", "ref"]],
+  note: "The coloured arc is how much you have used. The <b>white mark on the rim is the clock</b>: how far through the window you are. Arc behind the mark means you are fine; arc running ahead of it means you are burning faster than the window allows. The figure in the hole is the share used. Blank corners are the invisible braille character, so Claude Code's trimming cannot shear the circle.",
+  draw(w5, ww) {
+    const block = (w, label, short, reset) => {
+      const g = ring(9, 4, 7.9, 4.4, Math.min(1, w.used / 100), w.ef, w.early ? toneP(w.used) : w.tone);
+      put(g[1], 3, (w.used >= 100 ? "100" : pct(w.used).padStart(3)), "w");
+      put(g[2], 3, short.padEnd(3), "d");
+      const lines = [txt(label, "b"), txt("↻ " + reset, "d"), paceWords(w), outlook(w)];
+      return g.map((r, i) => [...r, cell(" "), ...pad(lines[i], 25)]);
+    };
+    const a = block(w5, "5-hour", "5h", fmtLeft(w5.leftSec)), b = block(ww, "weekly", "wk", dayClock(ww.resetAt));
+    return [header(), ...a.map((r, i) => [...r, ...txt(" "), ...b[i]])];
+  } },
+
+{ id: "speedo", name: "2. Speedometer", q: "How fast am I spending, against what the limit allows?",
+  tags: [["4 rows", "cost"], ["Claude Code's data only", "ok"], ["braille: check in WezTerm", "ref"]],
+  note: "A wheel for <b>speed, not amount</b>. Straight up is exactly the pace the limit allows (1.0×); the needle leans into red when you are on course to run out before the refill. It hides how much is used, so the figure is printed beside it.",
+  draw(w5, ww) {
+    const block = (w, label) => {
+      const g = speedo(w);
+      const lines = [txt(`${label} ${pct(w.used)} used`, "b"), paceWords(w), outlook(w)];
+      return g.map((r, i) => [...r, cell(" "), ...pad(lines[i], 23)]);
+    };
+    const a = block(w5, "5-hour"), b = block(ww, "weekly");
+    return [header(), ...a.map((r, i) => [...r, ...txt("  "), ...b[i]])];
+  } },
+
+{ id: "pacebar", name: "3. Pace bar", q: "Am I ahead of the clock or behind it?",
+  tags: [["3 rows", "ok"], ["Claude Code's data only", "ok"]],
+  note: "The bar the chosen design kept. It fills with what you have used; the <b>white post is the clock</b>, how far through the window you are. Fill short of the post: you will last. Fill past it: you are spending faster than the window refills, and the words say so. Same rows as today.",
+  draw(w5, ww) {
+    const N = 28;
+    const bar = (label, w, reset) => {
+      const tone = w.early ? toneP(w.used) : w.tone, u = Math.min(1, w.used / 100);
+      const full = Math.floor(u * N), rem = Math.round((u * N - full) * 8);
+      const cells = Array.from({ length: N }, (_, i) =>
+        i < full ? cell("█", tone) : i === full && rem > 0 ? cell(EIGHTHS[rem], tone) : cell("░", "t"));
+      cells[Math.min(N - 1, Math.floor(w.ef * N))] = cell("┃", "w");
+      return [...txt(label.padEnd(8)), ...cells, ...txt(pct(w.used).padStart(5), toneP(w.used)), ...txt("  "),
+              ...paceWords(w), ...txt("  ↻ " + reset, "d")];
+    };
+    return [header(), bar("5-hour", w5, fmtLeft(w5.leftSec)), bar("weekly", ww, dayClock(ww.resetAt))];
+  } },
+
+{ id: "forecast", name: "4. Forecast in words", q: "Will I run out before it refills, and when?",
+  tags: [["3 rows", "ok"], ["Claude Code's data only", "ok"]],
+  note: "No picture at all: one sentence per window, worked out from the same pace. The plainest to read, and the only one that names the clock time you would run dry. It reads well next to any of the others too.",
+  draw(w5, ww) {
+    const line = (label, w, reset) => {
+      let s, c;
+      if (w.capped)               { s = `at the cap · refills ${reset}`; c = "r"; }
+      else if (w.early)           { s = `too early to tell · refills ${reset}`; c = "d"; }
+      else if (w.atRefill > 100)  { s = `runs dry at ${when(w.dryAt)}, ${fmtLeft(w.leftSec - w.dryIn)} before the refill`; c = "r"; }
+      else                        { s = `on track for about ${pct(w.atRefill)} by ${reset}`; c = w.tone; }
+      return [...txt(label.padEnd(8)), ...txt(pct(w.used) + " used", toneP(w.used)), ...txt(" · ", "d"), ...txt(s, c)];
+    };
+    return [header(), line("5-hour", w5, when(w5.resetAt)), line("weekly", ww, dayClock(ww.resetAt))];
+  } },
+
+{ id: "ledger", name: "5. Allowance ledger", q: "What can I spend per hour, or per day, and am I within it?",
+  tags: [["4 rows", "cost"], ["needs a history file", "cost"]],
+  note: "The limit as a budget. <b>Allowance</b> is what is left divided by the time left: spend at that rate and you land exactly on the cap at the refill. <b>Lately</b> compares your recent spending with that allowance. Lately needs the small history file; it is simulated here.",
+  draw(w5, ww) {
+    const h5 = history(w5, 20, 7), hw = history(ww, 7, 11);
+    const done5 = h5.filter(v => v !== null), recentN = Math.min(4, done5.length);
+    const recentHrs = Math.max(0.25, Math.min(4, w5.ef * 20) * 0.25);
+    const lately5 = done5.slice(-recentN).reduce((s, v) => s + v, 0) / recentHrs;
+    const today = hw[Math.min(6, Math.floor(ww.ef * 7))] || 0;
+    const allow5 = w5.leftSec > 60 ? (100 - w5.used) / (w5.leftSec / 3600) : 0;
+    const allowW = ww.leftSec > 60 ? (100 - ww.used) / (ww.leftSec / 86400) : 0;
+    const col = (s, n, right) => right ? s.padStart(n) : s.padEnd(n);
+    const r = (label, w, refill, allow, unit, latelyTxt, over) => [
+      ...txt(col(label, 8)), ...txt(col(pct(w.used), 5, 1), toneP(w.used)), ...txt(col(pct(100 - w.used), 6, 1)),
+      ...txt("  " + col(refill, 14)), ...txt(col(`${allow.toFixed(1)}%/${unit}`, 12)),
+      ...txt(latelyTxt + " ", over ? "r" : "g"), ...txt(over ? "▲ over" : "✓ within", over ? "r" : "g")];
+    return [header(),
+      txt(col("window", 8) + col("spent", 5, 1) + col("left", 6, 1) + "  " + col("refills", 14) + col("allowance", 12) + "lately", "d"),
+      r("5-hour", w5, "in " + fmtLeft(w5.leftSec), allow5, "hr", `${lately5.toFixed(1)}%/hr`, lately5 > allow5),
+      r("weekly", ww, dayClock(ww.resetAt), allowW, "day", `${today.toFixed(1)}% today`, today > allowW)];
+  } },
+
+{ id: "oneline", name: "6. One line", q: "Just the numbers, in the least space.",
+  tags: [["1 row", "ok"], ["Claude Code's data only", "ok"]],
+  note: "Everything on the model row, with a small pie per window: ○ ◔ ◑ ◕ ● in quarters. Gives back two rows of conversation. When a window is on course to run dry, its countdown is replaced by the time it would run out.",
+  draw(w5, ww) {
+    const pie = p => ["○", "◔", "◑", "◕", "●"][Math.min(4, Math.round(p / 25))];
+    const seg = (label, w, reset) => [...txt(label + " ", "d"), ...txt(pie(w.used) + " ", toneP(w.used)),
+      ...txt(pct(w.used), toneP(w.used)), ...txt(" "),
+      ...(w.atRefill > 100 && !w.early && !w.capped ? txt("dry " + when(w.dryAt), "r") : txt("↻" + reset, "d"))];
+    return [[...txt("Opus 5.5"), ...txt(" · ", "d"), ...txt("ctx ", "d"), ...txt(pie(S.cx) + " ", toneP(S.cx)),
+             ...txt(pct(S.cx), toneP(S.cx)), ...txt(" · ", "d"),
+             ...seg("5h", w5, fmtLeft(w5.leftSec).replace(" ", "")), ...txt(" · ", "d"),
+             ...seg("wk", ww, DAYS[new Date(ww.resetAt).getDay()])]];
+  } },
+
+{ id: "spark", name: "7. Burn sparkline", q: "When did I spend it? Were there bursts?",
+  tags: [["3 rows", "ok"], ["needs a history file", "cost"]],
+  note: "One bar per quarter hour across the five hours, and one per day across the week, coloured by whether that slice ran faster than the window allows. Dots are time still to come. The only design that shows <b>shape over time</b>; it needs the history file and is simulated here.",
+  draw(w5, ww) {
+    const bars = (vals, sust) => { const mx = Math.max(...vals.filter(v => v !== null), sust * .5);
+      return vals.map(v => v === null ? cell("·", "t")
+        : cell(SPARK[Math.max(0, Math.min(7, Math.ceil(v / mx * 8) - 1))], v > sust * 1.5 ? "r" : v > sust ? "y" : "g")); };
+    const h5 = history(w5, 20, 7), hw = history(ww, 7, 11);
+    const start = new Date(ww.resetAt - H7 * 1000);
+    const days = [];
+    bars(hw, 100 / 7).forEach((c, i) => { days.push(cell(DAYS[(start.getDay() + i) % 7][0], "d"), c, cell(" ")); });
+    return [header(),
+      [...txt("5-hour  "), ...bars(h5, 100 / 20), ...txt(pct(w5.used).padStart(6), toneP(w5.used)), ...txt("  ↻ " + fmtLeft(w5.leftSec), "d")],
+      [...txt("weekly  "), ...days.slice(0, -1), ...txt(pct(ww.used).padStart(5), toneP(ww.used)), ...txt("  ↻ " + dayClock(ww.resetAt), "d")]];
+  } },
+];
+
+/* ---------------------------------------------------------------- page */
+const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+/* WezTerm draws braille itself (custom_block_glyphs, on by default): eight dots
+   spread across the whole cell. Browsers use a font whose dots are small and
+   bunched, so the mock draws each braille cell the way WezTerm does. */
+const DOT_XY = [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [0, 3], [1, 3]];
+function brailleSvg(code) {
+  const bits = code - 0x2800;
+  if (!bits) return "";
+  const dots = DOT_XY.map(([x, y], i) => bits & (1 << i)
+    ? `<circle cx="${2.6 + x * 4.8}" cy="${2.75 + y * 5.5}" r="1.75"/>` : "").join("");
+  return `<svg viewBox="0 0 10 22" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">${dots}</svg>`;
+}
+function renderRows(rows) {
+  const frame = [txt("─".repeat(W), "d"), [...txt("❯ ", "d"), cell(" ", "cur")], txt("─".repeat(W), "d")];
+  return [...frame, ...rows].map(r => `<div class="tr">${r.map(x => {
+    const code = x.ch.codePointAt(0);
+    return code >= 0x2800 && code <= 0x28FF
+      ? `<span class="tc bx ${x.c}">${brailleSvg(code)}</span>`
+      : `<span class="tc ${x.c}">${esc(x.ch)}</span>`;
+  }).join("")}</div>`).join("");
+}
+
+function buildCards() {
+  document.getElementById("cards").innerHTML = DESIGNS.map((d, i) => `${i === 1 ? '<div class="grouphead">Considered, not chosen</div>' : ""}
+    <div class="card${d.pick ? " pick" : ""}" id="card-${d.id}">
+      <div class="card-h"><h3>${d.name}</h3><span class="q">${d.q}</span></div>
+      <div class="tags">${d.tags.map(([t, k]) => `<span class="tag ${k}">${t}</span>`).join("")}</div>
+      <div class="termwrap"><div class="term" id="term-${d.id}"></div></div>
+      <div class="note">${d.note}</div>
+    </div>`).join("");
+}
+
+function render() {
+  for (const k of ["u5", "l5", "uw", "lw", "cx"]) S[k] = +document.getElementById(k).value;
+  const w5 = win(S.u5, S.l5 * 60, H5), ww = win(S.uw, S.lw * 3600, H7);
+  document.getElementById("u5v").textContent = pct(S.u5);
+  document.getElementById("l5v").textContent = fmtLeft(S.l5 * 60) + " · " + when(w5.resetAt);
+  document.getElementById("uwv").textContent = pct(S.uw);
+  document.getElementById("lwv").textContent = fmtLeft(S.lw * 3600) + " · " + dayClock(ww.resetAt);
+  document.getElementById("cxv").textContent = pct(S.cx);
+  const paceTxt = w => w.capped ? "at the cap" : w.early ? "too early to tell" : `${w.pace.toFixed(1)}× · ${w.state}`;
+  document.getElementById("s5").textContent = `${pct(w5.used)} used · ${fmtLeft(w5.leftSec)} left`;
+  document.getElementById("sw").textContent = `${pct(ww.used)} used · ${fmtLeft(ww.leftSec)} left`;
+  document.getElementById("p5").textContent = paceTxt(w5);
+  document.getElementById("pw").textContent = paceTxt(ww);
+  for (const d of DESIGNS) {
+    const rows = d.draw(w5, ww);
+    // Claude Code trims each row: a row that starts or ends with a plain space would not survive as drawn.
+    rows.forEach((r, i) => { if (r.length && (/\s/.test(r[0].ch) || r.length > W))
+      console.warn(`${d.id} row ${i}: ${/\s/.test(r[0].ch) ? "starts with a space" : "wider than " + W}`); });
+    document.getElementById("term-" + d.id).innerHTML = renderRows(rows);
+  }
+}
+
+function setPreset(i) {
+  const [, v] = PRESETS[i];
+  for (const k in v) document.getElementById(k).value = v[k];
+  document.querySelectorAll("#presets button").forEach((b, j) => b.classList.toggle("on", j === i));
+  render();
+}
+
+document.getElementById("presets").innerHTML = PRESETS.map(([n], i) => `<button type="button" data-i="${i}">${n}</button>`).join("");
+document.getElementById("presets").addEventListener("click", e => { const b = e.target.closest("button"); if (b) setPreset(+b.dataset.i); });
+for (const k of ["u5", "l5", "uw", "lw", "cx"]) document.getElementById(k).addEventListener("input", () => {
+  document.querySelectorAll("#presets button").forEach(b => b.classList.remove("on")); render(); });
+buildCards();
+setPreset(0);
+</script>
+</body>
+</html>
