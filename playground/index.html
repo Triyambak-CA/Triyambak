@@ -102,15 +102,24 @@
          slug:     "url-slug",                  // matches /playground/<slug>/
          tagline:  "One-line description for the card.",
          summary:  "1-2 sentence description, used as the cover page's <meta description> and og:description.",
-         category: "3D lab | Explainer | Tool | Other",
+         category: "3D lab | Explainer | Terminal tool | Tool | Other",
          status:   "live | beta | coming-soon",
          updated:  "Sep 2026",
        },
-       The card image is /playground/<slug>/og.png (1200x630), the same file the
+       The card image is /playground/<slug>/og.png (2400x1260, shown at 1200x630), the same file the
        cover page uses for link previews on LinkedIn and X.
        ══════════════════════════════════════════════════════ */
 
     const PLAYGROUND_LIST = [
+      {
+        name:     "Claude Code Status Line",
+        slug:     "claude-statusline",
+        tagline:  "Two live meters under the Claude Code prompt: how much of my plan I have used, and whether it will last until the refill. Plus the seven designs I drew before picking one.",
+        summary:  "Two live meters under the Claude Code prompt: how much of my plan I have used, and whether it will last until the refill.",
+        category: "Terminal tool",
+        status:   "live",
+        updated:  "Oct 2026",
+      },
       {
         name:     "Inside a File",
         slug:     "inside-a-file",

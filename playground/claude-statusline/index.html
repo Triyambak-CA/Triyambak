@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Two live meters under the Claude Code prompt: how much of my plan I have used, and whether it will last until the refill.">
+  <title>Claude Code Status Line · Playground · S Triyambaka Patro</title>
+  <link rel="canonical" href="https://triyambak.in/playground/claude-statusline/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="S Triyambaka Patro">
+  <meta property="og:title" content="Know before you run dry">
+  <meta property="og:description" content="Two live meters under the Claude Code prompt: how much of my plan I have used, and whether it will last until the refill.">
+  <meta property="og:url" content="https://triyambak.in/playground/claude-statusline/">
+  <meta property="og:image" content="https://triyambak.in/playground/claude-statusline/og.png?v=1">
+  <meta property="og:image:width" content="2400">
+  <meta property="og:image:height" content="1260">
+  <meta property="og:image:alt" content="A terminal status line with two usage meters: a 5-hour bar at 60% running past a white clock post, and a weekly bar at 30%.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@Triyambak_CA">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/site.css">
+  <style>
+    /* The status line as the terminal draws it, in its own exact colours. */
+    .sl{background:#141414;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px 20px;margin:22px 0 6px;
+        overflow-x:auto;font:400 14px/1.55 "JetBrains Mono",ui-monospace,Menlo,monospace;color:#E6E6E6;white-space:pre}
+    .sl .d{color:#707070}.sl .k{color:#3E3E3E}.sl .g{color:#99FFE4}.sl .y{color:#FFC799}.sl .r{color:#FF8A8A}
+    .sl .c{color:#8FD3FF}.sl .m{color:#D9B3FF}.sl .w{color:#FFFFFF;font-weight:600}
+    .pg-caption a{text-decoration:underline;text-underline-offset:3px}
+  </style>
+</head>
+<body class="tools-page">
+
+  <!-- ════════════════ BACKGROUND ════════════════ -->
+  <div class="bg-layer" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-lines"></div>
+  </div>
+  <div id="cursor-glow" aria-hidden="true"></div>
+
+  <!-- ════════════════ NAV ════════════════ -->
+  <nav id="navbar">
+    <a href="/" class="nav-logo" aria-label="S Triyambaka Patro - Home">
+      <span class="logo-badge">
+        <img src="/Photos/ChatGPT Image Dec 16, 2025, 09_36_41 PM.png" alt="S Triyambaka Patro">
+      </span>
+      S Triyambaka Patro
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/#about">About</a></li>
+      <li><a href="/#experience">Experience</a></li>
+      <li><a href="/#practice">Practice</a></li>
+      <li><a href="/#qualifications">Qualifications</a></li>
+      <li><a href="/#skills">Skills</a></li>
+      <li><a href="/tools/">Tools</a></li>
+      <li><a href="/playground/" class="active">Playground</a></li>
+      <li><a href="/#contact">Contact</a></li>
+    </ul>
+    <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" id="closeMenu" aria-label="Close menu">✕</button>
+    <a href="/#about" class="mm-link">About</a>
+    <a href="/#experience" class="mm-link">Experience</a>
+    <a href="/#practice" class="mm-link">Practice</a>
+    <a href="/#qualifications" class="mm-link">Qualifications</a>
+    <a href="/#skills" class="mm-link">Skills</a>
+    <a href="/tools/" class="mm-link">Tools</a>
+    <a href="/playground/" class="mm-link">Playground</a>
+    <a href="/#contact" class="mm-link">Contact</a>
+  </div>
+
+  <main>
+
+    <!-- Breadcrumb -->
+    <div class="container" style="padding-top: 110px;">
+      <p class="eyebrow"><a href="/playground/" style="color:inherit">Playground</a> &nbsp;/&nbsp; <span style="color:var(--t2)">Claude Code Status Line</span></p>
+    </div>
+
+    <!-- ════════════════ HERO ════════════════ -->
+    <section id="pg-hero" style="padding-top: 32px; padding-bottom: 40px;">
+      <div class="container">
+        <h1 class="sec-title" style="margin-bottom: 18px;">Know before you <em>run dry</em></h1>
+        <p class="tool-tagline">Claude Code is the AI coding tool I run in my terminal. My plan gives it a 5-hour limit and a weekly one. Now two live meters under the prompt tell me how much I have used, and whether it will last until the refill.</p>
+        <div class="tool-meta-row">
+          <span class="status-badge s-completed"><span class="status-dot"></span>Live</span>
+          <span class="tag">Terminal tool</span>
+          <span class="cc-meta">Last updated: 2 Oct 2026</span>
+        </div>
+        <div class="hero-actions" style="margin-top: 28px; opacity: 1; animation: none;">
+          <a href="designs.html" class="btn btn-primary">Compare the designs →</a>
+          <a href="/playground/" class="btn btn-ghost">← All experiments</a>
+        </div>
+
+        <div class="pg-media" style="margin-top: 40px;">
+          <video id="tourVideo" src="tour.mp4?v=1" poster="og.png?v=1" autoplay muted loop playsinline controls preload="metadata"
+                 aria-label="An explainer of the status line: the old one-line status line, then the new rows, the bar and the white clock post, the bar overtaking the post as the sentence turns to 'runs dry', a time-lapse of a whole 5-hour window, the weekly row, and how it works."></video>
+        </div>
+        <p class="pg-caption">A 61-second explainer, recorded frame by frame, with an original soundtrack. Tap the speaker icon for sound.</p>
+        <p class="pg-caption">Soundtrack: an original score played on <a href="https://archive.org/details/fluidr3-gm-gs" target="_blank" rel="noopener">FluidR3 GM</a> samples by Frank Wen (<a href="https://opensource.org/license/mit" target="_blank" rel="noopener">MIT licence</a>) and <a href="https://github.com/sgossner/VSCO-2-CE" target="_blank" rel="noopener">VSCO-2 Community Edition</a> samples (<a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">CC0</a>).</p>
+      </div>
+    </section>
+
+    <!-- ════════════════ WHAT IT SHOWS ════════════════ -->
+    <section id="what-it-shows" style="padding: 60px 0;">
+      <div class="container">
+        <p class="eyebrow">Overview</p>
+        <h2 class="sec-title">What it <em>shows</em></h2>
+        <div class="glass-flat tool-prose">
+          <p>Three rows under the prompt. The first is the model, how full the conversation is, and the folder. The other two are my plan's limits.</p>
+<div class="sl" role="img" aria-label="Three status rows: the model, context and folder; the 5-hour limit at 60%, running dry at 1:20pm, 1 hour 40 minutes before the 3:00pm refill; the weekly limit at 30%, on track for about 54% by Monday 2:00pm."><span>Opus 5.5</span><span class="d"> │ ctx </span><span class="g">12%</span><span class="d"> │ </span><span class="c">~/projects/invoice-parser</span> <span class="m">main</span>
+<span>5-hour  </span><span class="r">██████</span><span class="w">┃</span><span class="r">██▋</span><span class="k">░░░░░░</span><span class="y">  60%</span>  <span class="r">runs dry at 1:20pm, 1h 40m before the 3:00pm refill</span>
+<span>weekly  </span><span class="g">████▊</span><span class="k">░░░</span><span class="w">┃</span><span class="k">░░░░░░░</span><span class="g">  30%</span>  <span class="g">on track for about 54% by Mon 2:00pm</span></div>
+          <ul>
+            <li><strong>The bar</strong> fills with how much of the limit I have used.</li>
+            <li><strong>The white post</strong> is the clock: how far through the window I am.</li>
+            <li><strong>Fill past the post</strong> means I am spending faster than the limit refills.</li>
+            <li><strong>The sentence</strong> says what that means: the share I will have used by the refill, or the time I would run dry, how early that is, and when it refills.</li>
+            <li><strong>The colours</strong> follow: mint with room to spare, amber when I would end at 85% or more, coral when I would run dry first or am at the cap.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ WHY PACE ════════════════ -->
+    <section id="why-pace" style="padding: 60px 0;">
+      <div class="container">
+        <p class="eyebrow">The idea</p>
+        <h2 class="sec-title">Pace, not just <em>percent</em></h2>
+        <div class="callout tool-prose">
+          <p>A percentage alone says how much is gone, not whether the rest will last. The forecast compares two shares: how much of the limit I have used, and how much of the window has passed.</p>
+          <ul>
+            <li><strong>60% used</strong> when <strong>40% of the five hours</strong> has gone means spending 1.5 times faster than the limit allows.</li>
+            <li>At that rate it lands at 150% by the refill, so it runs dry first: at 1:20pm, 1 hour 40 minutes before the 3:00pm refill.</li>
+            <li>The forecast assumes I keep going at my average rate so far. A heavy first hour reads "runs dry" until the hours catch up, and in the first tenth of a window it says "too early to tell" instead.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ THE DESIGNS ════════════════ -->
+    <section id="designs" style="padding: 60px 0;">
+      <div class="container">
+        <p class="eyebrow">Choosing it</p>
+        <h2 class="sec-title">Seven ways to <em>draw it</em></h2>
+        <div class="glass-flat tool-prose">
+          <p>Before building it, I drew seven designs with characters a terminal can really print: twin braille wheels, a speedometer, a pace bar, a forecast in words, an allowance ledger, a one-line version and a burn sparkline. I picked the pace bar and gave it the forecast's sentence. Drag the sliders on the comparison page and every design redraws.</p>
+        </div>
+        <div class="hero-actions" style="margin-top: 28px; opacity: 1; animation: none;">
+          <a href="designs.html" class="btn btn-primary">Compare the designs →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ HOW IT WAS MADE ════════════════ -->
+    <section id="how-it-was-made" style="padding: 60px 0 108px;">
+      <div class="container">
+        <p class="eyebrow">Behind it</p>
+        <h2 class="sec-title">How it was <em>made</em></h2>
+        <div class="glass-flat tool-prose">
+          <p>Built with Claude Code. Claude Code already hands its status line the plan's usage figures; a small shell script of about 160 lines works out the pace and the forecast and prints the three rows in fixed colours. No app, no extra login, and it redraws after every reply and every minute. Twenty-five automated checks hold its rows, each forecast worked out by hand.</p>
+        </div>
+        <div class="hero-actions" style="margin-top: 36px; opacity: 1; animation: none;">
+          <a href="designs.html" class="btn btn-primary">Compare the designs →</a>
+          <a href="/playground/" class="btn btn-ghost">← All experiments</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p class="footer-text">© 2026 S Triyambaka Patro · Chartered Accountant · ACA, ICAI</p>
+    <p class="footer-text">New Delhi &amp; Berhampur, Odisha</p>
+  </footer>
+
+  <script>
+    /* ── Cursor glow ── */
+    const glow = document.getElementById('cursor-glow');
+    document.addEventListener('mousemove', e => {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top  = e.clientY + 'px';
+    });
+
+    /* ── Mobile menu ── */
+    const hamburger  = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMenu  = document.getElementById('closeMenu');
+    hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
+    closeMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    document.querySelectorAll('.mm-link').forEach(a => {
+      a.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    });
+
+    /* ── Respect reduced motion: no autoplaying video ── */
+    try {
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const v = document.getElementById('tourVideo');
+        v.removeAttribute('autoplay'); v.pause();
+      }
+    } catch (e) {}
+  </script>
+</body>
+</html>

@@ -135,7 +135,7 @@ Components for the `/playground/` hub and `/playground/<slug>/` cover pages. Tok
 
 **Status mapping for Playground:** `live` → `s-completed`, `beta` → `s-watching`, `coming-soon` → `s-queue`.
 
-Each experiment is a folder `/playground/<slug>/` with a themed cover page (`index.html`) and, when the experiment is a full-screen app with its own look, the app itself beside it (e.g. `lab.html`), copied in unchanged. The cover page carries the Open Graph tags, so links shared on LinkedIn or X show a preview card.
+Each experiment is a folder `/playground/<slug>/` with a themed cover page (`index.html`) and, when the experiment is a full-screen app with its own look, the app itself beside it (e.g. `lab.html`, `designs.html`), either copied in as-is or as a public edition scrubbed of private references. The cover page carries the Open Graph tags, so links shared on LinkedIn or X show a preview card.
 
 ---
 
