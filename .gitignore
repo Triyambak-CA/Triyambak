@@ -1,2 +1,6 @@
 CLAUDE.md
 mockup/
+Claude_Learning/
+
+# Local-only AI agent instructions (kept on disk, never uploaded to GitHub)
+AGENTS.md
